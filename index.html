@@ -86,6 +86,8 @@ svg text{fill:var(--mu);font-family:inherit}
 .tech #sub,.tech [data-em]{display:none!important}
 @media print{.gs,nav,.bar,.banner,.toast,.top .mu{display:none!important}body{background:#fff;color:#000}.form{border:0}.fs{break-inside:avoid}.seg button:not(.on){display:none}.wrap{overflow:visible}}
 
+.ph{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}.ph img{height:44px;border-radius:5px;border:1px solid var(--ln)}.phb{cursor:pointer;font-size:12px;padding:3px 8px;display:inline-block;position:relative}
+@media print{.noprint,#authBtn{display:none!important}.panel,.panel *{background:#fff!important;color:#000!important;text-shadow:none!important;box-shadow:none!important}.panel{border-color:#999!important}}
 /* ===== CMMS hero section (added) ===== */
 .cmms{--cm-bg:#020D24;--cm-blue:#1e7bff;--cm-cyan:#4fc3ff;position:relative;overflow:hidden;isolation:isolate;direction:ltr;margin-bottom:14px;border-radius:14px;border:1px solid #11306b;background:var(--cm-bg);color:#fff;font-family:"Montserrat","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif}
 .cmms[hidden]{display:none}
@@ -221,7 +223,7 @@ dialog#loginDlg::backdrop{background:rgba(1,8,24,.75)}
 .al li .ic{display:inline-block;width:22px;font-weight:700}
 </style></head><body><main>
 <div class="top"><div><h1>جولات المرافق والصيانة الوقائية</h1><div class="mu" id="sub"></div><span class="chip ok" id="role" style="margin-top:6px"></span> <button type="button" class="gh" id="authBtn" hidden></button></div>
-<nav id="nav"><button data-go="d">لوحة المؤشرات</button><button data-go="r">جولة اليوم</button><button data-go="p">الصيانة الوقائية</button><button data-go="s">الإعدادات</button></nav></div>
+<nav id="nav"><button data-go="d">لوحة المؤشرات</button><button data-go="r">جولة اليوم</button><button data-go="p">الصيانة الوقائية</button><button data-go="t">التقارير</button><button data-go="s">الإعدادات</button></nav></div>
 <section id="cmms" class="cmms" aria-label="READING 2027">
 <div class="cmms-hex" aria-hidden="true"><svg id="cm-hexsvg" viewBox="0 0 400 600" preserveAspectRatio="xMaxYMid slice"><defs><linearGradient id="cm-hf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a86ff" stop-opacity=".55"/><stop offset="1" stop-color="#0a3fb0" stop-opacity=".08"/></linearGradient></defs><g class="cm-hexa" id="cm-hexa"></g><g class="cm-hexb" id="cm-hexb"></g></svg></div>
 <div class="cmms-stage">
@@ -381,7 +383,7 @@ list.push({it,sv:Math.abs(pc)>=.6?2:1,tag:(b>a?'↑ +':'↓ −')+P+'%',l1:'ال
 list.sort((x,y)=>y.sv-x.sv);return{list,n}}
 function alerts(){const L=latest(),D=DB.days[L],al=[];
 IT.forEach(it=>{const v=D[it.id]||{},s=sev(v.s),fr=isFire(it);
-if(s=='bd')al.push({sv:2,ic:'✕',t:it.sec+': '+it.n+' — '+v.s});else if(s=='wn')al.push({sv:fr?2:1,ic:'!',t:it.sec+': '+it.n+' — '+v.s});
+if(s=='bd')al.push({sv:2,ic:'✕',p:v.p,t:it.sec+': '+it.n+' — '+v.s});else if(s=='wn')al.push({sv:fr?2:1,ic:'!',p:v.p,t:it.sec+': '+it.n+' — '+v.s});
 if(+v.a>0)al.push({sv:2,ic:'!',t:it.n+': '+v.a+' إنذار مسجل'})});
 ppmRows().forEach(r=>{if(r.ratio>=1)al.push({sv:2,ic:'⚙',t:'صيانة متأخرة: '+r.it.n+' (عدّت '+Math.round(r.used-r.p.iv)+' ساعة)'});else if(r.ratio>=.85)al.push({sv:1,ic:'⚙',t:'صيانة قربت: '+r.it.n+' (باقي '+Math.round(r.p.iv-r.used)+' ساعة)'})});
 anoms().list.forEach(a=>al.push({sv:a.sv,ic:/^(↓|واقف)/.test(a.tag)?'↓':'↑',t:a.txt}));
@@ -414,7 +416,7 @@ const al=alerts(),an=anoms(),late=ppmRows().filter(r=>r.ratio>=1).length,crit=al
 return'<div class="hero '+st+'"><div class="hi">'+(crit?'✕':warn?'!':'✓')+'</div><div class="ht"><b>'+(crit?crit+' بند حرج محتاج تدخل فورًا':warn?warn+' بند محتاج متابعة':'كل الأصول سليمة والقراءات في المعدل الطبيعي')+'</b><span>'+(crit&&warn?'و'+warn+' بند محتاج متابعة · ':'')+'آخر جولة: '+fd(L)+'</span></div></div>'
 +(L!=T?'<div class="banner"><span>آخر جولة مسجلة: '+fd(L)+'. جولة اليوم لسه ما اتسجلتش.</span><button class="gh" data-go="r">سجّل جولة اليوم</button></div>':'')
 +'<div class="sum"><div class="ok"><b>'+n.ok+'</b>أصل سليم</div><div class="wn"><b>'+n.wn+'</b>متوقف أو إنذار</div><div class="bd"><b>'+n.bd+'</b>عطل</div><div class="'+(late?'bd':'ok')+'"><b>'+late+'</b>صيانة متأخرة</div><div class="'+anc+'"><b>'+an.list.length+'</b>قراءة غريبة</div></div>'
-+(al.length?'<div class="panel"><h2>محتاج تدخل ('+al.length+')</h2><ul class="al">'+al.slice(0,15).map(a=>'<li class="s'+a.sv+'"><span class="ic">'+a.ic+'</span>'+a.t+'</li>').join('')+'</ul>'+(al.length>15?'<p class="mu">و'+(al.length-15)+' بنود تانية.</p>':'')+'</div>':'')
++(al.length?'<div class="panel"><h2>محتاج تدخل ('+al.length+')</h2><ul class="al">'+al.slice(0,15).map(a=>'<li class="s'+a.sv+'"><span class="ic">'+a.ic+'</span>'+a.t+(a.p&&ADM?' <button class="gh" data-phv="'+esc(a.p)+'">📷 صورة</button>':'')+'</li>').join('')+'</ul>'+(al.length>15?'<p class="mu">و'+(al.length-15)+' بنود تانية.</p>':'')+'</div>':'')
 +'<div class="panel"><h2>حالة الأقسام</h2><div class="tiles">'+secTiles(D).map(t=>'<div class="tl '+t.lv+'"><div class="th"><b>'+t.name+'</b><span>'+t.ok+'/'+t.n+' سليم</span></div><div class="pb2"><i style="width:'+Math.round(t.ok/t.n*100)+'%"></i></div>'+(t.bad.length?'<ul>'+t.bad.slice(0,6).map(b=>'<li><span>'+b.it.n+'</span><span class="chip '+b.c+'">'+b.st+'</span></li>').join('')+(t.bad.length>6?'<li class="mu">و'+(t.bad.length-6)+' تانيين</li>':'')+'</ul>':'<div class="ok2">✓ كله سليم</div>')+'</div>').join('')+'</div></div>'
 +'<div class="cols"><div class="panel">'+anPanel(an)+'</div>'
 +'<div class="panel">'+chart('0_0','استهلاك الكهرباء','kWh')+'<div style="height:12px"></div>'+chart('0_1','استهلاك الميه','م³')+(IT.some(a=>a.id=='1_1')?'<div style="height:12px"></div>'+chart('1_1','مستوى سولار المولد','لتر',1):'')+'</div></div>'}
@@ -436,7 +438,7 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g
 const TY=[['s','حالة فقط'],['sh','حالة + ساعات تشغيل'],['sr','حالة + قراءة'],['sa','حالة + إنذارات'],['f','حالة (حريق)']];
 function ctl(it){return'<div class="ed"><select data-cf="k" data-id="'+it.id+'" aria-label="نوع البند">'+TY.map(t=>'<option value="'+t[0]+'"'+(it.k==t[0]?' selected':'')+'>'+t[1]+'</option>').join('')+'</select>'+(it.k.includes('r')?'<input type="text" data-cf="u" data-id="'+it.id+'" value="'+esc(it.u)+'" placeholder="الوحدة" aria-label="الوحدة">':'')+'<select data-cf="g" data-id="'+it.id+'" aria-label="الصفحة"><option value="A"'+(it.g=='A'?' selected':'')+'>'+PG.A+'</option><option value="B"'+(it.g=='B'?' selected':'')+'>'+PG.B+'</option></select><button type="button" class="gh" data-del="'+it.id+'">حذف</button></div>'}
 function frow(it){const v=draft[it.id]||{},f=it.k.includes('h')?'h':it.k.includes('r')?'r':'',pv=f?prevOf(it.id,f,T):null,c=sev(v.s),inp=(g,pvv)=>'<input type="number" inputmode="decimal" data-id="'+it.id+'" data-f="'+g+'" value="'+(v[g]??'')+'" placeholder="'+(pvv!=null?'آخر: '+pvv:'')+'" aria-label="'+LB[g](it)+'">';
-return'<tr class="'+(c=='bd'?'rb':'')+'"><td class="cd">'+it.code+'</td><td>'+(EM?'<input type="text" class="nt" data-nm="'+it.id+'" value="'+esc(it.n)+'">'+ctl(it):'<b>'+it.n+'</b>')+'</td><td><div class="seg" data-id="'+it.id+'">'+opts(it).map(o=>'<button type="button" data-v="'+o+'" class="'+(v.s==o?'on '+sev(o):'')+'">'+o+'</button>').join('')+'</div></td><td>'+(f?inp(f,pv)+'<small>'+LB[f](it)+'</small>':'<span class="mu">—</span>')+'</td><td>'+(it.k.includes('a')?inp('a',prevOf(it.id,'a',T)):'<span class="mu">—</span>')+'</td><td><input type="text" class="nt" data-id="'+it.id+'" data-f="n" value="'+esc(v.n||'')+'" placeholder="'+(c=='bd'?'اكتب سبب العطل':'')+'" aria-label="ملاحظات"></td></tr>'}
+return'<tr class="'+(c=='bd'?'rb':'')+'"><td class="cd">'+it.code+'</td><td>'+(EM?'<input type="text" class="nt" data-nm="'+it.id+'" value="'+esc(it.n)+'">'+ctl(it):'<b>'+it.n+'</b>')+'</td><td><div class="seg" data-id="'+it.id+'">'+opts(it).map(o=>'<button type="button" data-v="'+o+'" class="'+(v.s==o?'on '+sev(o):'')+'">'+o+'</button>').join('')+'</div></td><td>'+(f?inp(f,pv)+'<small>'+LB[f](it)+'</small>':'<span class="mu">—</span>')+'</td><td>'+(it.k.includes('a')?inp('a',prevOf(it.id,'a',T)):'<span class="mu">—</span>')+'</td><td><input type="text" class="nt" data-id="'+it.id+'" data-f="n" value="'+esc(v.n||'')+'" placeholder="'+(c=='bd'?'اكتب سبب العطل':'')+'" aria-label="ملاحظات">'+phCell(it)+'</td></tr>'}
 function round(){const m=draft['_m'+G]||(draft['_m'+G]={sh:'صباحي',tech:'',sup:''});let dn=0,bad=0;
 IT.forEach(it=>{if(!draft[it.id])draft[it.id]={s:opts(it)[0]}});const GI=IT.filter(it=>it.g==G);GI.forEach(it=>{const v=draft[it.id]||{};if(['h','r','a'].every(f=>!it.k.includes(f)||(v[f]!==''&&v[f]!=null&&v[f]!==undefined)))dn++;if(sev(v.s)=='bd')bad++});
 const pc=Math.round(dn/(GI.length||1)*100);
@@ -454,6 +456,9 @@ function showDone(){if(document.querySelector('.done-ov'))return;const o=documen
 const SHEET_URL='https://script.google.com/macros/s/AKfycbxzqNb_Kyxj2SUJSdseuWaZhAA1x0pKZihCynjN8aCMkMs-3hfkUcSe1SOoSW7Pg98wGw/exec';
 const SHEET_TOKEN='fm-noon-2027';
 function pushRound(){if(!CL)return;const D=DB.days[T],m=D['_m'+G]||{},items={};IT.filter(it=>it.g==G).forEach(it=>{items[it.id]=D[it.id]});if(!m.tech&&UN)m.tech=UN;const idx=Math.max(0,SH.indexOf(m.sh));
+IT.filter(it=>it.g==G&&PH[it.id]).forEach(it=>{const pid=T+'_'+G+'_s'+idx+'_'+it.id;items[it.id]=Object.assign({},items[it.id],{p:pid});CL.doc('photos/'+pid).set({d:T,g:G,it:it.id,img:PH[it.id],by:UN,t:new Date().toISOString()}).catch(e=>console.warn('photo',e));delete PH[it.id]});
+logA('جولة','تسجيل '+PG[G]+' ('+(m.sh||'—')+')');
+if(!navigator.onLine)toast('مفيش نت: الجولة اتحفظت على الجهاز وهتتبعت أول ما النت يرجع.');
 const useSheet=SHEET_URL.indexOf('http')==0;let shown=false,fails=0;const need=useSheet?2:1;
 const okMsg=()=>{if(!shown){shown=true;showDone()}};
 const badMsg=()=>{fails++;if(fails>=need&&!shown){shown=true;toast('تعذر إرسال الجولة، حاول تاني.')}};
@@ -461,11 +466,11 @@ CL.doc('rounds/'+T+'_'+G+'_s'+idx).set({d:T,g:G,m,items,by:UN}).then(okMsg).catc
 if(useSheet){const values={},LB={s:'الحالة',r:'قراءة',h:'ساعات',a:'إنذار'};
 IT.filter(it=>it.g==G).forEach(it=>{const v=D[it.id]||{},f=[];if(it.k!='r')f.push(['s',v.s]);if(it.k.includes('r'))f.push(['r',v.r]);if(it.k.includes('h'))f.push(['h',v.h]);if(it.k.includes('a'))f.push(['a',v.a]);
 f.forEach(([t,val])=>{if(val===undefined||val===null||val==='')return;const nm=(f.length==1&&t=='s')?it.n:it.n+' - '+LB[t]+(t=='r'&&it.u?' ('+it.u+')':'');values[nm]=t=='a'?(val?'نعم':'لا'):val})});
-fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({token:SHEET_TOKEN,key:T+'_s'+idx,date:T,shift:m.sh||'',tech:m.tech||'',sup:m.sup||'',values})}).then(okMsg).catch(badMsg)}}
+sendSheet(JSON.stringify({token:SHEET_TOKEN,key:T+'_s'+idx,date:T,shift:m.sh||'',tech:m.tech||'',sup:m.sup||'',values})).then(okMsg).catch(badMsg)}}
 function showLogin(){NEEDLOGIN=true;ADM=false;NAMED=false;UN='';V='r';DB.days={};DB.demo=false;DB.ppm={};render();updAuthUI()}
 function loginView(){return'<div class="panel" style="max-width:460px;margin:30px auto;text-align:center"><h2>سجّل دخولك لتسجيل الجولة</h2><p class="mu">ادخل بحساب جوجل اللي المسؤول ضافه. لو مش قادر تدخل، كلّم المسؤول.</p><button class="pr" data-glogin="1" style="width:100%">الدخول بحساب جوجل</button><p style="margin-top:16px"><button class="gh" data-alogin="1">دخول المسؤول (اسم مستخدم وكلمة مرور)</button></p><p class="mu">لو الصفحة مفتوحة من داخل تطبيق (واتساب مثلًا) ودخول جوجل مش شغال، افتحها من Chrome أو Safari.</p></div>'}
 function googleLogin(){const pr=new firebase.auth.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});AUTH.signInWithPopup(pr).catch(e=>{const c=e&&e.code;if(c=='auth/popup-blocked'||c=='auth/operation-not-supported-in-this-environment')AUTH.signInWithRedirect(pr);else if(c!='auth/popup-closed-by-user'&&c!='auth/cancelled-popup-request'){console.warn(e);toast(c=='auth/unauthorized-domain'?'الدومين ده مش مضاف في Firebase (Authorized domains).':'تعذر الدخول بجوجل.')}})}
-function loadUsers(){if(!CL)return;Promise.all([CL.collection('users').get(),CL.collection('allowed').get()]).then(([a,b])=>{UL=[...a.docs.map(d=>Object.assign({id:d.id,src:'p'},d.data())),...b.docs.map(d=>Object.assign({id:d.id,src:'g'},d.data()))].sort((x,y)=>(x.at||'')<(y.at||'')?-1:1);if(V=='s')render()}).catch(()=>toast('تعذر تحميل المستخدمين.'))}
+function loadUsers(){if(!CL)return;loadAudit();Promise.all([CL.collection('users').get(),CL.collection('allowed').get()]).then(([a,b])=>{UL=[...a.docs.map(d=>Object.assign({id:d.id,src:'p'},d.data())),...b.docs.map(d=>Object.assign({id:d.id,src:'g'},d.data()))].sort((x,y)=>(x.at||'')<(y.at||'')?-1:1);if(V=='s')render()}).catch(()=>toast('تعذر تحميل المستخدمين.'))}
 const isMe=u=>{const c=AUTH&&AUTH.currentUser;return !!c&&(u.id==c.uid||u.id==(c.email||'').toLowerCase())};
 const uref=u=>CL.doc((u.src=='g'?'allowed/':'users/')+u.id);
 function settings(){if(!CL)return'<div class="panel"><p class="mu">إدارة المستخدمين محتاجة اتصال بـ Firebase.</p></div>';
@@ -475,50 +480,87 @@ return'<div class="panel"><h2>إضافة فني بحساب جوجل</h2><div cla
 +'<div class="panel"><h2>المستخدمين ('+UL.length+')</h2>'+(UL.length?'<div class="wrap"><table><tr><th>الاسم</th><th>الدخول</th><th>النوع</th><th>الصلاحية</th><th>الحالة</th><th></th></tr>'+UL.map(u=>'<tr><td><b>'+esc(u.name||'')+'</b></td><td class="cd">'+esc(u.src=='g'?u.id:(u.u||''))+'</td><td>'+(u.src=='g'?'جوجل':'كلمة مرور')+'</td><td><span class="chip '+(u.role=='admin'?'ok':'wn')+'">'+(u.role=='admin'?'مسؤول':'فني')+'</span></td><td><span class="chip '+(u.active===false?'bd':'ok')+'">'+(u.active===false?'معطّل':'شغال')+'</span></td><td>'+(isMe(u)?'<span class="mu">أنت</span>':'<button class="gh" data-utog="'+esc(u.id)+'">'+(u.active===false?'تفعيل':'تعطيل')+'</button> <button class="gh" data-urole="'+esc(u.id)+'">تغيير الصلاحية</button>')+'</td></tr>').join('')+'</table></div>':'<p class="mu">لسه مفيش مستخدمين مضافين. حساب المسؤول الأساسي مش بيظهر هنا.</p>')+'<p class="mu">التعطيل بيمنع الدخول والإرسال. تغيير كلمة مرور أو حذف حساب نهائيًا بيتم من Firebase، Authentication.</p></div>'}
 async function addGoogleUserUI(){const name=document.getElementById('gnm').value.trim(),em=document.getElementById('gem').value.trim().toLowerCase(),role=document.getElementById('grl').value;
 if(!name||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return toast('اكتب الاسم وإيميل جوجل صحيح.');
-try{await CL.doc('allowed/'+em).set({name,role,active:true,at:new Date().toISOString()});toast('اتضاف. يقدر يدخل بحساب جوجل بتاعه.');loadUsers()}catch(e){console.warn(e);toast('تعذر الإضافة. تأكد من قواعد Firestore.')}}
+try{await CL.doc('allowed/'+em).set({name,role,active:true,at:new Date().toISOString()});logA('إضافة مستخدم جوجل',name+' ('+em+')');toast('اتضاف. يقدر يدخل بحساب جوجل بتاعه.');loadUsers()}catch(e){console.warn(e);toast('تعذر الإضافة. تأكد من قواعد Firestore.')}}
 async function addUserUI(){const g=i=>document.getElementById(i).value.trim(),name=g('unm'),us=g('uus').toLowerCase(),pw=document.getElementById('upw').value,role=g('url');
 if(!name||!/^[a-z0-9._-]{3,30}$/.test(us))return toast('اكتب الاسم، واسم مستخدم إنجليزي (3 حروف على الأقل).');
 if(pw.length<8)return toast('كلمة المرور 8 حروف على الأقل.');
 let c;try{const app2=firebase.apps.find(a=>a.name=='sec')||firebase.initializeApp(FB_CONFIG,'sec');c=await app2.auth().createUserWithEmailAndPassword(toEmail(us),pw);await app2.auth().signOut()}
 catch(e){console.warn(e);return toast(e&&e.code=='auth/email-already-in-use'?'اسم المستخدم ده موجود.':e&&e.code=='auth/weak-password'?'كلمة المرور ضعيفة.':'تعذر إنشاء الحساب.')}
-try{await CL.doc('users/'+c.user.uid).set({u:us,name,role,active:true,at:new Date().toISOString()});toast('اتضاف المستخدم.');loadUsers()}
+try{await CL.doc('users/'+c.user.uid).set({u:us,name,role,active:true,at:new Date().toISOString()});logA('إضافة مستخدم',name+' ('+us+')');toast('اتضاف المستخدم.');loadUsers()}
 catch(e){console.warn(e);toast('اتعمل الحساب لكن تعذر حفظ بياناته. تأكد من قواعد Firestore.')}}
+const SQ='fm-sheetq';
+const qs=b=>{try{const q=JSON.parse(localStorage.getItem(SQ)||'[]');q.push(b);localStorage.setItem(SQ,JSON.stringify(q.slice(-30)))}catch(e){}};
+const sendSheet=b=>fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:b}).catch(e=>{qs(b);throw e});
+function flushSheet(){if(SHEET_URL.indexOf('http')!=0)return;try{const q=JSON.parse(localStorage.getItem(SQ)||'[]');if(!q.length)return;localStorage.removeItem(SQ);q.forEach(b=>sendSheet(b).catch(()=>{}))}catch(e){}}
+function logA(act,d){if(!CL)return;CL.collection('audit').add({t:new Date().toISOString(),by:UN||(AUTH&&AUTH.currentUser&&AUTH.currentUser.email)||'',act,d:String(d||'')}).catch(e=>console.warn('audit',e))}
+function loadAudit(){if(!CL||!ADM)return;CL.collection('audit').orderBy('t','desc').limit(150).get().then(sn=>{AUD=sn.docs.map(d=>d.data());if(V=='s')render()}).catch(()=>{})}
+function auditPanel(){return'<div class="panel"><h2>سجل التغييرات</h2>'+(AUD.length?'<div class="wrap"><table><tr><th>الوقت</th><th>المستخدم</th><th>الإجراء</th><th>التفاصيل</th></tr>'+AUD.map(a=>'<tr><td>'+new Date(a.t).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'})+'</td><td>'+esc(a.by||'')+'</td><td>'+esc(a.act||'')+'</td><td>'+esc(a.d||'')+'</td></tr>').join('')+'</table></div>':'<p class="mu">لسه مفيش تغييرات مسجلة.</p>')+'<p class="mu">آخر 150 إجراء. السجل مش بيتعدل ولا بيتمسح من الصفحة.</p></div>'}
+function phCell(it){const p=PH[it.id];return'<div class="ph"><label class="gh phb">📷 صورة<input type="file" accept="image/*" capture="environment" data-ph="'+it.id+'" style="position:absolute;inset:0;opacity:0;width:100%;cursor:pointer"></label>'+(p?'<img src="'+p+'" alt="صورة"><button type="button" class="gh" data-phx="'+it.id+'">إزالة</button>':'')+'</div>'}
+function shrink(f){return new Promise((ok,no)=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),w=Math.round(im.width*k),h=Math.round(im.height*k),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);URL.revokeObjectURL(u);let q=.6,d=c.toDataURL('image/jpeg',q);while(d.length>230000&&q>.3){q-=.1;d=c.toDataURL('image/jpeg',q)}ok(d)};im.onerror=no;im.src=u})}
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.ph&&t.files&&t.files[0])shrink(t.files[0]).then(u=>{PH[t.dataset.ph]=u;render()}).catch(()=>toast('تعذر قراءة الصورة.'));if(t.id=='rmon'&&t.value){RM=t.value;render()}});
+function viewPh(id){CL.doc('photos/'+id).get().then(sn=>{if(!sn.exists)return toast('الصورة مش موجودة.');const o=document.createElement('div');o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99;display:grid;place-items:center;cursor:pointer';const im=document.createElement('img');im.src=sn.data().img;im.style.cssText='max-width:95%;max-height:92%;border-radius:8px';o.appendChild(im);o.addEventListener('click',()=>o.remove());document.body.appendChild(o)}).catch(()=>toast('تعذر تحميل الصورة.'))}
+function repData(mon){const ks=days().filter(k=>k.startsWith(mon)),d={faults:[],cons:[],tot:[],rounds:[],ppm:[]};
+ks.forEach(k=>{const D=DB.days[k];IT.forEach(it=>{const v=D[it.id];if(!v)return;const c=sev(v.s);if(c=='bd'||c=='wn'||+v.a>0)d.faults.push([k,it.sec,it.n,v.s||'',+v.a||0,v.n||'',v.p||''])})});
+IT.filter(it=>it.cum).forEach(it=>{const sr=series(it.id,'r');let t=0;for(let i=1;i<sr.length;i++){if(!sr[i][0].startsWith(mon))continue;const u=sr[i][1]-sr[i-1][1];t+=u;d.cons.push([sr[i][0],it.n,sr[i][1],Math.round(u*10)/10,gap(sr[i-1][0],sr[i][0])])}d.tot.push([it.n,Math.round(t*10)/10,it.u])});
+const nd=mon==T.slice(0,7)?+T.slice(8):new Date(+mon.slice(0,4),+mon.slice(5),0).getDate();let ok=0;
+for(let i=1;i<=nd;i++){const k=mon+'-'+String(i).padStart(2,'0'),D=DB.days[k]||{},a=!!D._mA,b=!!D._mB;ok+=(a?1:0)+(b?1:0);d.rounds.push([k,a?'تمت':'لا',b?'تمت':'لا',[(D._mA||{}).tech,(D._mB||{}).tech].filter(Boolean).join('، ')])}
+d.pct=Math.round(ok/(nd*2)*100);
+ppmRows().forEach(r=>d.ppm.push([r.it.n,r.cur==null?'':r.cur,r.p.last,r.p.iv,Math.round(r.ratio*100)+'%',r.cur==null?'بدون ساعات':r.ratio>=1?'متأخرة':r.ratio>=.85?'قربت':'تمام']));return d}
+function reports(){const d=repData(RM),TB=(h,rows)=>'<div class="wrap"><table><tr>'+h.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>'+rows.join('')+'</table></div>',td=a=>'<tr>'+a.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>';
+return'<div class="panel noprint"><div class="ctl"><label class="num">الشهر<input type="month" id="rmon" value="'+RM+'" style="width:auto"></label><button class="pr" data-xl="1">تصدير Excel</button><button class="gh" data-pr="1">طباعة / حفظ PDF</button></div></div>'
++'<div class="panel"><h2>تقرير شهر '+RM+'</h2><p>الالتزام بالجولات: <b>'+d.pct+'%</b> <span class="mu">(جولتين في اليوم: '+esc(PG.A)+' و'+esc(PG.B)+')</span></p></div>'
++'<div class="panel"><h2>الأعطال والإنذارات ('+d.faults.length+')</h2>'+(d.faults.length?TB(['التاريخ','القسم','الأصل','الحالة','الإنذارات','ملاحظات',''],d.faults.map(r=>'<tr>'+r.slice(0,6).map(x=>'<td>'+esc(x)+'</td>').join('')+'<td>'+(r[6]?'<button class="gh noprint" data-phv="'+esc(r[6])+'">صورة</button>':'')+'</td></tr>')):'<p class="mu">مفيش أعطال في الشهر ده.</p>')+'</div>'
++'<div class="panel"><h2>الاستهلاك</h2>'+TB(['العداد','إجمالي الشهر','الوحدة'],d.tot.map(td))+(d.cons.length?'<h2 style="margin-top:14px">تفاصيل القراءات</h2>'+TB(['التاريخ','العداد','القراءة','الاستهلاك','عدد الأيام'],d.cons.map(td)):'<p class="mu">مفيش قراءتين متتاليتين كفاية في الشهر ده.</p>')+'</div>'
++'<div class="panel"><h2>الجولات اليومية</h2>'+TB(['اليوم',PG.A,PG.B,'الفنيين'],d.rounds.map(td))+'</div>'
++'<div class="panel"><h2>الصيانة الوقائية (الوضع الحالي)</h2>'+TB(['المعدة','الساعات الحالية','آخر صيانة عند','كل (ساعة)','التقدم','الحالة'],d.ppm.map(td))+'</div>'}
+function xl(){const run=()=>{const d=repData(RM),wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
+const add=(n,rows)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),n);
+add('الأعطال',[['التاريخ','القسم','الأصل','الحالة','الإنذارات','ملاحظات'],...d.faults.map(r=>r.slice(0,6))]);
+add('الاستهلاك',[['العداد','إجمالي الشهر','الوحدة'],...d.tot,[],['التاريخ','العداد','القراءة','الاستهلاك','عدد الأيام'],...d.cons]);
+add('الجولات',[['اليوم',PG.A,PG.B,'الفنيين'],...d.rounds]);
+add('الصيانة',[['المعدة','الساعات الحالية','آخر صيانة عند','كل (ساعة)','التقدم','الحالة'],...d.ppm]);
+XLSX.writeFile(wb,'report-'+RM+'.xlsx')};
+if(window.XLSX)return run();const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=run;sc.onerror=()=>toast('تعذر تحميل مكتبة Excel. تأكد من الإنترنت.');document.head.appendChild(sc)}
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}
-function render(){if(!ADM){V='r';EM=false}document.body.classList.toggle('tech',!ADM);document.getElementById('nav').style.display=ADM?'':'none';const rl=document.getElementById('role');if(rl){rl.textContent=ADM?'وضع المسؤول'+(UN?' ('+UN+')':''):'وضع الفني'+(UN?' ('+UN+')':': تسجيل الجولة');rl.className='chip '+(ADM?'ok':'wn')}const h1=document.querySelector('h1');if(!h1.dataset.d)h1.dataset.d=h1.textContent;h1.textContent=DB.nm.app||h1.dataset.d;document.getElementById('app').innerHTML=(ERR?'<div class="banner"><span>'+ERR+'</span></div>':'')+(DB.demo&&ADM?'<div class="banner"><span>البيانات الحالية تجريبية، عشان تشوف الشكل.</span><button class="gh" data-clear="1">امسح التجريبي وابدأ</button></div>':'')+(NEEDLOGIN?loginView():V=='d'?dash():V=='r'?round():V=='s'?settings():ppmv());
+function render(){if(!ADM){V='r';EM=false}document.body.classList.toggle('tech',!ADM);document.getElementById('nav').style.display=ADM?'':'none';const rl=document.getElementById('role');if(rl){rl.textContent=ADM?'وضع المسؤول'+(UN?' ('+UN+')':''):'وضع الفني'+(UN?' ('+UN+')':': تسجيل الجولة');rl.className='chip '+(ADM?'ok':'wn')}const h1=document.querySelector('h1');if(!h1.dataset.d)h1.dataset.d=h1.textContent;h1.textContent=DB.nm.app||h1.dataset.d;document.getElementById('app').innerHTML=(ERR?'<div class="banner"><span>'+ERR+'</span></div>':'')+(DB.demo&&ADM?'<div class="banner"><span>البيانات الحالية تجريبية، عشان تشوف الشكل.</span><button class="gh" data-clear="1">امسح التجريبي وابدأ</button></div>':'')+(NEEDLOGIN?loginView():V=='d'?dash():V=='r'?round():V=='t'?reports():V=='s'?settings()+auditPanel():ppmv());
 document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go==V));const cm=document.getElementById('cmms');if(cm)cm.hidden=V!='d';
 const L=latest();document.getElementById('sub').textContent=L?'آخر جولة: '+fd(L):'مفيش جولات مسجلة'}
-document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(!ADM&&!(t.dataset.v||t.dataset.g||t.dataset.save||t.dataset.glogin||t.dataset.alogin))return;
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(!ADM&&!(t.dataset.v||t.dataset.g||t.dataset.save||t.dataset.glogin||t.dataset.alogin||t.dataset.phx))return;
 if(t.dataset.glogin){googleLogin()}
 else if(t.dataset.alogin){document.getElementById('loginDlg').showModal()}
 else if(t.dataset.em&&ADM){EM=!EM;render()}
 else if(t.dataset.g){G=t.dataset.g;render();scrollTo(0,0)}
 else if(t.dataset.go){V=t.dataset.go;if(V=='r')initDraft();if(V=='s')loadUsers();render();scrollTo(0,0)}
+else if(t.dataset.xl){xl()}
+else if(t.dataset.pr){print()}
+else if(t.dataset.phv){viewPh(t.dataset.phv)}
+else if(t.dataset.phx){delete PH[t.dataset.phx];render()}
 else if(t.dataset.uadd){addUserUI()}
 else if(t.dataset.gadd){addGoogleUserUI()}
-else if(t.dataset.utog){const u=UL.find(x=>x.id==t.dataset.utog);if(u&&!isMe(u))uref(u).update({active:u.active===false}).then(loadUsers).catch(()=>toast('تعذر التحديث.'))}
-else if(t.dataset.urole){const u=UL.find(x=>x.id==t.dataset.urole);if(u&&!isMe(u))uref(u).update({role:u.role=='admin'?'tech':'admin'}).then(loadUsers).catch(()=>toast('تعذر التحديث.'))}
+else if(t.dataset.utog){const u=UL.find(x=>x.id==t.dataset.utog);if(u&&!isMe(u))logA(u.active===false?'تفعيل مستخدم':'تعطيل مستخدم',u.name||u.id)||uref(u).update({active:u.active===false}).then(loadUsers).catch(()=>toast('تعذر التحديث.'))}
+else if(t.dataset.urole){const u=UL.find(x=>x.id==t.dataset.urole);if(u&&!isMe(u))logA('تغيير صلاحية',(u.name||u.id)+' ← '+(u.role=='admin'?'فني':'مسؤول'))||uref(u).update({role:u.role=='admin'?'tech':'admin'}).then(loadUsers).catch(()=>toast('تعذر التحديث.'))}
 else if(t.dataset.v){const id=t.parentNode.dataset.id;draft[id].s=t.dataset.v;render()}
 else if(t.dataset.save){let miss=0;IT.filter(it=>it.g==G).forEach(it=>{const v=draft[it.id];['h','r','a'].forEach(f=>{if(it.k.includes(f)){if(v[f]===''||v[f]==null)miss++;else v[f]=+v[f]}})});
 const old=DB.days[T]||{};IT.filter(it=>it.g==G).forEach(it=>{old[it.id]=JSON.parse(JSON.stringify(draft[it.id]))});old['_m'+G]=JSON.parse(JSON.stringify(draft['_m'+G]));DB.days[T]=old;persist();pushRound();V=ADM?'d':'r';render();scrollTo(0,0);toast(miss?'اتحفظت الجولة. فيه '+miss+' قراءة فاضية.':'اتحفظت الجولة.')}
-else if(t.dataset.add!==undefined){DB.custom.push({id:t.dataset.add+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
-else if(t.dataset.del){DB.hide[t.dataset.del]=1;persist();rebuild();render()}
-else if(t.dataset.delsec!==undefined){IT.filter(it=>it.id.split('_')[0]==t.dataset.delsec).forEach(it=>{DB.hide[it.id]=1});persist();rebuild();render()}
-else if(t.dataset.addsec){const i=S.length;DB.csec.push('قسم جديد');S.push(['قسم جديد',[]]);SN.push('قسم جديد');DB.custom.push({id:i+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
-else if(t.dataset.restore){DB.hide={};persist();rebuild();render()}
-else if(t.dataset.done){const id=t.dataset.done;P(id).last=curH(id);persist();render();toast('اتسجلت الصيانة.')}
+else if(t.dataset.add!==undefined){logA('إضافة بند','في قسم '+(SN[+t.dataset.add]||t.dataset.add));DB.custom.push({id:t.dataset.add+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
+else if(t.dataset.del){logA('حذف بند',(IT.find(x=>x.id==t.dataset.del)||{}).n||t.dataset.del);DB.hide[t.dataset.del]=1;persist();rebuild();render()}
+else if(t.dataset.delsec!==undefined){logA('حذف قسم',SN[+t.dataset.delsec]||t.dataset.delsec);IT.filter(it=>it.id.split('_')[0]==t.dataset.delsec).forEach(it=>{DB.hide[it.id]=1});persist();rebuild();render()}
+else if(t.dataset.addsec){logA('إضافة قسم','قسم جديد');const i=S.length;DB.csec.push('قسم جديد');S.push(['قسم جديد',[]]);SN.push('قسم جديد');DB.custom.push({id:i+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
+else if(t.dataset.restore){logA('استرجاع','استرجاع المحذوف');DB.hide={};persist();rebuild();render()}
+else if(t.dataset.done){const id=t.dataset.done;P(id).last=curH(id);logA('تمت صيانة',((IT.find(x=>x.id==id)||{}).n||id)+' عند '+curH(id)+' ساعة');persist();render();toast('اتسجلت الصيانة.')}
 else if(t.dataset.clear){DB={days:{},ppm:{},demo:false};persist();V='r';initDraft();render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.f){const v=draft[t.dataset.id];v[t.dataset.f]=t.value===''?'':t.value}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.m&&draft['_m'+G])draft['_m'+G][t.dataset.m]=t.value});
-document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.cf){const c=DB.cfg[t.dataset.id]||(DB.cfg[t.dataset.id]={});c[t.dataset.cf]=t.value;persist();rebuild();render()}});
-document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.nm){const v=t.value.trim();if(v)DB.nm[t.dataset.nm]=v;else delete DB.nm[t.dataset.nm];applyNames();persist();render()}});
-document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.iv){P(t.dataset.iv).iv=Math.max(1,+t.value||250);persist();render()}});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.cf){const c=DB.cfg[t.dataset.id]||(DB.cfg[t.dataset.id]={});c[t.dataset.cf]=t.value;logA('تعديل بند',((IT.find(x=>x.id==t.dataset.id)||{}).n||t.dataset.id)+': '+t.dataset.cf+' = '+t.value);persist();rebuild();render()}});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.nm){const v=t.value.trim();logA('تعديل اسم',((IT.find(x=>x.id==t.dataset.nm)||{}).n||t.dataset.nm)+' ← '+(v||'(الأصلي)'));if(v)DB.nm[t.dataset.nm]=v;else delete DB.nm[t.dataset.nm];applyNames();persist();render()}});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.iv){P(t.dataset.iv).iv=Math.max(1,+t.value||250);logA('فترة صيانة',((IT.find(x=>x.id==t.dataset.iv)||{}).n||'')+': '+Math.max(1,+t.value||250)+' ساعة');persist();render()}});
 persist();
 /* ===== Standalone backend (Firebase) — fill FB_CONFIG, see SETUP.md ===== */
 const FB_CONFIG={apiKey:"AIzaSyCEDIKPi0Y-X0AcB-zXw2tRI_rSV6TcAxE",authDomain:"fm-noon.firebaseapp.com",projectId:"fm-noon",storageBucket:"fm-noon.firebasestorage.app",messagingSenderId:"1047596065786",appId:"1:1047596065786:web:fddadb8f292b13792afa43"};
 const ADMIN_EMAILS=["fm-team@fm-noon.app","hkota407@gmail.com"];
 const REQUIRE_LOGIN=true; /* true = الدخول إجباري بحساب جوجل أو حساب مسمى، false = الفني يدخل مجهول زي الأول */
 const toEmail=v=>{v=(v||"").trim().toLowerCase();return v.indexOf("@")>-1?v:v+"@fm-noon.app"};
-let unsub=null,booted=false,AUTH=null,ERR='',UN='',UL=[],NAMED=false,NEEDLOGIN=false;
+let unsub=null,booted=false,AUTH=null,ERR='',UN='',UL=[],NAMED=false,NEEDLOGIN=false,PH={},RM=T.slice(0,7),AUD=[];
 function failState(m){console.warn(m);ERR='';ADM=false;V='r';DB.days={};DB.demo=false;DB.ppm={};initDraft();render();updAuthUI()}
 const FBON=!!FB_CONFIG.apiKey;
 function updAuthUI(){const b=document.getElementById('authBtn');if(!b)return;b.hidden=!FBON;b.textContent=NAMED&&FBON?'تسجيل خروج':'تسجيل الدخول'}
@@ -538,11 +580,14 @@ if(!FBON){render();updAuthUI();return}
 if(!window.firebase){failState('تعذر تحميل خدمة Firebase. تأكد من الاتصال بالإنترنت ثم حدّث الصفحة.');return}
 document.getElementById('app').innerHTML='<p class="mu">جاري التحميل...</p>';
 try{firebase.initializeApp(FB_CONFIG)}catch(e){}
-AUTH=firebase.auth();CL=firebase.firestore();
+AUTH=firebase.auth();CL=firebase.firestore();CL.enablePersistence({synchronizeTabs:true}).catch(e=>console.warn('persistence',e));
 AUTH.onAuthStateChanged(u=>{if(!u){if(REQUIRE_LOGIN){showLogin();return}AUTH.signInAnonymously().catch(er=>failState('تعذر الاتصال بالخادم ('+((er&&er.code)||'خطأ')+'). فعّل Anonymous في Firebase Authentication.'));return}applySession(u)})}
 document.getElementById('authBtn').addEventListener('click',()=>{if(!AUTH)return;if(NAMED)AUTH.signOut();else document.getElementById('loginDlg').showModal()});
 document.getElementById('lgX').addEventListener('click',()=>document.getElementById('loginDlg').close());
 document.getElementById('loginForm').addEventListener('submit',e=>{e.preventDefault();AUTH.signInWithEmailAndPassword(toEmail(document.getElementById('lgE').value),document.getElementById('lgP').value).then(()=>{document.getElementById('loginDlg').close();document.getElementById('lgP').value=''}).catch(()=>toast('بيانات الدخول غير صحيحة.'))});
+(function(){const ob=document.createElement('div');ob.id='offb';ob.className='banner noprint';ob.style.display='none';ob.innerHTML='<span>مفيش إنترنت. كمّل تسجيل الجولة عادي، وهتتبعت لوحدها لما النت يرجع.</span>';document.querySelector('main').prepend(ob);
+const net=()=>{ob.style.display=navigator.onLine?'none':'flex';if(navigator.onLine)flushSheet()};addEventListener('online',net);addEventListener('offline',net);net();
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{})})();
 boot();
 </script>
 <script>
