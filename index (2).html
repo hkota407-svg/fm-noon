@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جولات المرافق والصيانة الوقائية</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#eef1f3;--sf:#fff;--ink:#14232e;--mu:#5d6c78;--ln:#d5dce1;--ac:#0b5fa5;--ok:#1f7a4d;--wn:#9a5b00;--bd:#b8321f;--okb:#e1f2e8;--wnb:#fcefd3;--bdb:#fadfda;--na:#e3e8eb;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a22;--sf:#17252f;--ink:#e6edf2;--mu:#9aabb8;--ln:#2a3b47;--ac:#6ab3ee;--ok:#4cc38a;--wn:#f0b24b;--bd:#ff8a7a;--okb:#14332a;--wnb:#3a2e12;--bdb:#3b1d1a;--na:#22323d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a22;--sf:#17252f;--ink:#e6edf2;--mu:#9aabb8;--ln:#2a3b47;--ac:#6ab3ee;--ok:#4cc38a;--wn:#f0b24b;--bd:#ff8a7a;--okb:#14332a;--wnb:#3a2e12;--bdb:#3b1d1a;--na:#22323d;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans Arabic",Tahoma,Arial,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 10px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mu{color:var(--mu);font-size:14px}
+nav{display:flex;gap:4px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:4px}
+nav button{border:0;background:none;color:var(--ink);font:inherit;padding:8px 14px;border-radius:7px;cursor:pointer}
+nav button.on{background:var(--ac);color:#fff;font-weight:700}
+button:focus-visible,input:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.pr{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 18px;font:700 15px inherit;font-family:inherit;cursor:pointer}
+.gh{background:none;border:1px solid var(--ln);color:var(--ink);border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.banner{background:var(--wnb);color:var(--wn);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px}
+.panel{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:16px;margin-bottom:14px}
+.sum{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:14px}
+.sum div{font-size:14px;color:var(--mu)}.sum b{display:block;font-size:34px;line-height:1.1;color:var(--ink)}
+.sum .bd b{color:var(--bd)}.sum .wn b{color:var(--wn)}.sum .ok b{color:var(--ok)}
+.map .g{display:flex;gap:10px;align-items:center;margin:6px 0}
+.map .gl{width:110px;font-size:13px;color:var(--mu);flex:none}
+.map .ts{display:flex;flex-wrap:wrap;gap:4px}
+.t{width:24px;height:24px;border-radius:5px;display:grid;place-items:center;font-size:12px;font-weight:700;border:1.5px solid}
+.t.ok{background:var(--okb);color:var(--ok);border-color:var(--ok)}.t.wn{background:var(--wnb);color:var(--wn);border-color:var(--wn)}.t.bd{background:var(--bdb);color:var(--bd);border-color:var(--bd)}.t.na{background:var(--na);color:var(--mu);border-color:var(--ln)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}.map .g{flex-direction:column;align-items:flex-start;gap:2px}}
+.al{list-style:none;margin:0;padding:0}
+.al li{padding:8px 10px;border-radius:7px;margin-bottom:6px;font-size:15px;border-inline-start:5px solid}
+.al .s2{background:var(--bdb);border-color:var(--bd)}.al .s1{background:var(--wnb);border-color:var(--wn)}
+.sec{margin-bottom:14px}.sec>h2{position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:2}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.row .nm{font-weight:500;min-width:150px}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:flex;border:1px solid var(--ln);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--mu);font:inherit;font-size:14px;padding:7px 12px;cursor:pointer;border-inline-start:1px solid var(--ln)}
+.seg button:first-child{border:0}
+.seg button.on.ok{background:var(--okb);color:var(--ok);font-weight:700}.seg button.on.wn{background:var(--wnb);color:var(--wn);font-weight:700}.seg button.on.bd{background:var(--bdb);color:var(--bd);font-weight:700}
+.num{display:flex;flex-direction:column;font-size:12px;color:var(--mu)}
+.num input{width:120px;font:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--ln);border-radius:6px;background:var(--bg);color:var(--ink)}
+.bar{position:sticky;bottom:0;background:var(--bg);padding:10px 0;display:flex;gap:12px;align-items:center}
+table{width:100%;border-collapse:collapse;font-size:15px}
+.wrap{overflow-x:auto}
+th,td{text-align:start;padding:9px 8px;border-bottom:1px solid var(--ln);white-space:nowrap}
+th{font-weight:500;color:var(--mu);font-size:13px}
+.pb{width:140px;height:10px;background:var(--na);border-radius:5px;overflow:hidden;display:inline-block;vertical-align:middle}
+.pb i{display:block;height:100%}
+.chip{display:inline-block;padding:2px 10px;border-radius:12px;font-size:13px;font-weight:700}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.wn{background:var(--wnb);color:var(--wn)}.chip.bd{background:var(--bdb);color:var(--bd)}
+td input{width:76px;font:inherit;padding:4px 6px;border:1px solid var(--ln);border-radius:6px;background:var(--bg);color:var(--ink)}
+.empty{text-align:center;padding:50px 10px}
+.toast{position:fixed;inset-inline:0;bottom:70px;margin:auto;width:fit-content;max-width:90%;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;z-index:9}
+svg text{fill:var(--mu);font-family:inherit}
+.form{background:var(--sf);border:1px solid var(--ln);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.fh{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 18px;background:#0b3a5f;color:#fff}
+.ft{font-size:20px;font-weight:700}.fh .mu{color:rgba(255,255,255,.8)}
+.fm{text-align:end;font-size:13px}.fm b{display:block;font-size:16px;direction:ltr}
+.fg{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ln)}
+.fg label{display:flex;flex-direction:column;font-size:12px;color:var(--mu);padding:10px 14px;border-inline-end:1px solid var(--ln)}
+.fg input,.fg select,.fg b{font:inherit;font-size:15px;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--ln);padding:4px 0;width:100%}
+.fp{padding:10px 18px;border-bottom:1px solid var(--ln);display:flex;gap:14px;align-items:center;font-size:14px;flex-wrap:wrap}
+.fs>h3{margin:0;padding:8px 18px;background:var(--na);font-size:15px;display:flex;justify-content:space-between;gap:10px}
+.ct th{background:var(--bg)}.ct td{padding:6px 8px;vertical-align:middle}
+.ct td input[data-f]{width:100px}
+.ct td small{display:block;font-size:11px;color:var(--mu)}
+.cd{font-family:ui-monospace,Consolas,monospace;color:var(--mu);font-size:13px;direction:ltr;text-align:end}
+.rb{background:var(--bdb)}
+.ct td input.nt{width:100%;min-width:170px}
+.sig{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:34px 18px 20px}
+.sig div{border-top:1px solid var(--ink);padding-top:6px;font-size:13px;color:var(--mu);text-align:center}
+@media(max-width:760px){.fg{grid-template-columns:1fr 1fr}.sig{grid-template-columns:1fr}}
+.gs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.gs button{border:1px solid var(--ln);background:var(--sf);color:var(--ink);font:inherit;padding:9px 16px;border-radius:8px;cursor:pointer}.gs button.on{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:700}
+.tin{font:inherit;color:inherit;background:transparent;border:0;border-bottom:1px dashed currentColor;width:100%;padding:2px 0}.ft .tin{font-size:20px;font-weight:700;width:340px;max-width:100%}
+.ed{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}.ed select,.ed input{font:inherit;font-size:12px;padding:3px 4px;border:1px solid var(--ln);border-radius:5px;background:var(--bg);color:var(--ink);width:auto}.ed input{width:70px}.ed .gh{padding:2px 8px;font-size:12px}
+.tech #sub,.tech [data-em]{display:none!important}
+@media print{.gs,nav,.bar,.banner,.toast,.top .mu{display:none!important}body{background:#fff;color:#000}.form{border:0}.fs{break-inside:avoid}.seg button:not(.on){display:none}.wrap{overflow:visible}}
+
+/* ===== CMMS hero section (added) ===== */
+.cmms{--cm-bg:#020D24;--cm-blue:#1e7bff;--cm-cyan:#4fc3ff;position:relative;overflow:hidden;isolation:isolate;direction:ltr;margin-bottom:14px;border-radius:14px;border:1px solid #11306b;background:var(--cm-bg);color:#fff;font-family:"Montserrat","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif}
+.cmms[hidden]{display:none}
+.cmms::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(55% 70% at 50% 52%,rgba(24,92,220,.34),transparent 72%),radial-gradient(40% 55% at 92% 18%,rgba(0,140,255,.20),transparent 70%),radial-gradient(35% 45% at 6% 92%,rgba(20,70,190,.22),transparent 70%),linear-gradient(180deg,#031236 0%,#020D24 60%,#010818 100%)}
+.cmms::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(70,150,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(70,150,255,.08) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(75% 75% at 50% 50%,#000 20%,transparent 100%);mask-image:radial-gradient(75% 75% at 50% 50%,#000 20%,transparent 100%)}
+.cmms-hex{position:absolute;top:0;bottom:0;right:0;width:50%;z-index:-1;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 45%);mask-image:linear-gradient(90deg,transparent 0,#000 45%)}
+.cmms-hex svg{width:100%;height:100%;display:block}
+.cmms-stage{position:relative;width:min(100%,640px);margin:0 auto;padding:clamp(8px,2.5vw,26px)}
+.cmms-stage svg{display:block;width:100%;height:auto;overflow:visible}
+.cmms text{font-family:"Montserrat","Segoe UI",Arial,sans-serif;fill:#fff}
+.cm-spin{transform-box:view-box;transform-origin:300px 300px;animation:cm-rot 80s linear infinite;will-change:transform}
+.cm-spin.rev{animation-duration:130s;animation-direction:reverse}
+.cm-pulse{animation:cm-pulse 4.5s ease-in-out infinite}
+.cm-pulse.d2{animation-delay:-2.2s}
+.cm-float{animation:cm-float 6s ease-in-out infinite;will-change:transform}
+.cm-node:nth-of-type(2) .cm-float{animation-delay:-1.5s}
+.cm-node:nth-of-type(3) .cm-float{animation-delay:-3s}
+.cm-node:nth-of-type(4) .cm-float{animation-delay:-4.5s}
+.cm-node{cursor:pointer;outline:none}
+.cm-halo{opacity:.38;transition:opacity .35s ease}
+.cm-badge{fill:#05194a;stroke:#2f8cff;stroke-width:2;transition:stroke .3s ease,fill .3s ease}
+.cm-ico{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s ease}
+.cm-node:hover .cm-halo,.cm-node:focus-visible .cm-halo{opacity:1}
+.cm-node:hover .cm-badge,.cm-node:focus-visible .cm-badge{stroke:#8fd6ff;fill:#08256a}
+.cm-hexa{animation:cm-drift 38s ease-in-out infinite alternate;will-change:transform}
+.cm-hexb{animation:cm-drift2 52s ease-in-out infinite alternate;will-change:transform}
+@keyframes cm-rot{to{transform:rotate(360deg)}}
+@keyframes cm-pulse{0%,100%{opacity:.35}50%{opacity:.95}}
+@keyframes cm-float{0%,100%{transform:translateY(-4px)}50%{transform:translateY(5px)}}
+@keyframes cm-drift{from{transform:translate(0,0)}to{transform:translate(-14px,18px)}}
+@keyframes cm-drift2{from{transform:translate(0,0)}to{transform:translate(12px,-16px)}}
+@media(max-width:760px){.cmms-hex{width:80%;opacity:.55}.cmms-stage{padding:10px}}
+@media(prefers-reduced-motion:reduce){.cmms *{animation:none!important}}
+@media print{.cmms{display:none!important}}
+
+/* ===== CMMS theme (system-wide) ===== */
+html:root,html:root:not([data-theme="light"]),html:root[data-theme="dark"],html:root[data-theme="light"]{
+--bg:#020D24;--sf:rgba(7,26,70,.62);--ink:#e8f1ff;--mu:#8fa9d4;--ln:#1a458f;--ac:#3b9cff;
+--ok:#3be3a0;--wn:#ffc04d;--bd:#ff6b6b;--okb:rgba(30,200,140,.14);--wnb:rgba(255,184,60,.14);--bdb:rgba(255,80,90,.16);--na:rgba(40,90,180,.22);
+--cm-glow:0 0 0 1px rgba(59,156,255,.18),0 0 22px rgba(30,123,255,.18);color-scheme:dark}
+body{background:#020D24;position:relative;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(60% 50% at 50% 0%,rgba(24,92,220,.30),transparent 70%),radial-gradient(40% 40% at 100% 40%,rgba(0,140,255,.14),transparent 70%),radial-gradient(40% 40% at 0% 100%,rgba(20,70,190,.20),transparent 70%),linear-gradient(180deg,#031236,#020D24 55%,#010818)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(70,150,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(70,150,255,.06) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(80% 80% at 50% 30%,#000 10%,transparent 100%);mask-image:radial-gradient(80% 80% at 50% 30%,#000 10%,transparent 100%)}
+h1{font-weight:700;letter-spacing:.2px;text-shadow:0 0 18px rgba(59,156,255,.55)}
+h2{color:#fff}
+.mu{color:var(--mu)}
+nav{background:rgba(7,26,70,.7);border:1px solid #1d4fa8;box-shadow:var(--cm-glow);border-radius:999px;padding:4px}
+nav button{border-radius:999px;color:#bcd2f5;transition:background .25s,color .25s,box-shadow .25s}
+nav button:hover{color:#fff;background:rgba(59,156,255,.16)}
+nav button.on{background:linear-gradient(135deg,#1e7bff,#4fc3ff);color:#02122f;box-shadow:0 0 16px rgba(79,195,255,.6)}
+.pr{background:linear-gradient(135deg,#1e7bff,#2fa7ff);color:#fff;box-shadow:0 0 16px rgba(47,167,255,.45);transition:box-shadow .25s,transform .25s}
+.pr:hover{box-shadow:0 0 26px rgba(79,195,255,.8);transform:translateY(-1px)}
+.gh{border-color:#1d4fa8;color:#cfe0ff;background:rgba(10,40,100,.35);transition:border-color .25s,box-shadow .25s,color .25s}
+.gh:hover{border-color:#4fc3ff;color:#fff;box-shadow:0 0 14px rgba(79,195,255,.4)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #4fc3ff;outline-offset:2px;box-shadow:0 0 12px rgba(79,195,255,.6)}
+.panel,.form,.row{background:var(--sf);border:1px solid var(--ln);box-shadow:var(--cm-glow);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.panel,.form{border-radius:14px}
+.banner{background:rgba(255,184,60,.12);border:1px solid rgba(255,184,60,.35);color:#ffd27d;border-radius:10px}
+.sum div{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:12px 18px;min-width:130px;box-shadow:var(--cm-glow)}
+.sum b{color:#fff;text-shadow:0 0 14px rgba(79,195,255,.6)}
+.sum .bd b{color:var(--bd);text-shadow:0 0 14px rgba(255,107,107,.55)}.sum .wn b{color:var(--wn);text-shadow:0 0 14px rgba(255,192,77,.5)}.sum .ok b{color:var(--ok);text-shadow:0 0 14px rgba(59,227,160,.5)}
+.t{border-radius:7px;transition:box-shadow .2s,transform .2s}
+.t:hover{transform:scale(1.15)}
+.t.ok{box-shadow:0 0 8px rgba(59,227,160,.35)}.t.wn{box-shadow:0 0 8px rgba(255,192,77,.35)}.t.bd{box-shadow:0 0 10px rgba(255,107,107,.5)}
+.al li{border-radius:8px}
+.sec>h2{background:linear-gradient(180deg,#020D24 70%,rgba(2,13,36,0))}
+.seg{border-color:#1d4fa8;background:rgba(5,20,60,.6)}
+.seg button{color:#9db8e6;border-inline-start-color:#1d4fa8;transition:background .2s,color .2s}
+.seg button:hover{color:#fff;background:rgba(59,156,255,.14)}
+.seg button.on.ok{box-shadow:inset 0 0 12px rgba(59,227,160,.25)}.seg button.on.wn{box-shadow:inset 0 0 12px rgba(255,192,77,.25)}.seg button.on.bd{box-shadow:inset 0 0 12px rgba(255,107,107,.3)}
+.num input,td input,.fg input,.fg select,.ed select,.ed input{background:rgba(3,16,48,.85);color:var(--ink);border-color:#1d4fa8;border-radius:6px}
+.fg input,.fg select{border-radius:0}
+.num input:focus,td input:focus,.ct td input:focus{border-color:#4fc3ff}
+input::placeholder{color:#5f7fb3}
+select option{background:#06194a;color:#e8f1ff}
+.fh{background:linear-gradient(120deg,#082a6b,#0b4fb5 60%,#0a6fd8);box-shadow:0 0 26px rgba(30,123,255,.35)}
+.ft{text-shadow:0 0 14px rgba(255,255,255,.35)}
+.fg,.fp,.fg label{border-color:var(--ln)}
+.fs>h3{background:linear-gradient(90deg,rgba(30,100,220,.35),rgba(30,100,220,.10));color:#fff;border-top:1px solid var(--ln)}
+.ct th,th{background:rgba(5,22,64,.75);color:#8fb4ee}
+th,td{border-bottom-color:rgba(26,69,143,.65)}
+tr:hover>td{background:rgba(59,156,255,.06)}
+.rb{background:var(--bdb)}
+.pb{background:rgba(40,90,180,.28);box-shadow:inset 0 0 6px rgba(0,0,0,.4)}
+.pb i{box-shadow:0 0 10px currentColor}
+.chip{border:1px solid currentColor}
+.sig div{border-top-color:#4a78c4}
+.gs button{background:rgba(10,40,100,.4);border-color:#1d4fa8;color:#cfe0ff;border-radius:999px;transition:box-shadow .25s}
+.gs button:hover{box-shadow:0 0 14px rgba(79,195,255,.4)}
+.gs button.on{background:linear-gradient(135deg,#1e7bff,#4fc3ff);color:#02122f;border-color:transparent;box-shadow:0 0 16px rgba(79,195,255,.55)}
+.bar{background:linear-gradient(0deg,#020D24 65%,rgba(2,13,36,0))}
+.toast{background:#0b3a85;color:#fff;border:1px solid #4fc3ff;box-shadow:0 0 22px rgba(79,195,255,.5)}
+svg text{fill:#9db8e6}
+svg rect[fill="var(--ac)"]{fill:url(#cm-bar)}
+.cd{color:#7fa3de}
+.empty h2{text-shadow:0 0 14px rgba(79,195,255,.4)}
+::-webkit-scrollbar{height:10px;width:10px}::-webkit-scrollbar-thumb{background:#1d4fa8;border-radius:6px}::-webkit-scrollbar-track{background:#041033}
+@media print{
+html:root,html:root:not([data-theme="light"]),html:root[data-theme="dark"]{--bg:#fff;--sf:#fff;--ink:#000;--mu:#444;--ln:#bbb;--ac:#0b5fa5;--ok:#1f7a4d;--wn:#9a5b00;--bd:#b8321f;--okb:#e1f2e8;--wnb:#fcefd3;--bdb:#fadfda;--na:#e3e8eb}
+body::before,body::after{display:none}
+.panel,.form,.row,.sum div{box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.fh{background:#0b3a5f;box-shadow:none}.fs>h3{background:#e3e8eb;color:#000}.ct th,th{background:#fff;color:#444}
+.num input,td input,.fg input,.fg select{background:#fff;color:#000}svg text{fill:#444}h1{text-shadow:none}
+}
+dialog#loginDlg{border:1px solid #2a63c4;border-radius:14px;background:#06194a;color:#e8f1ff;padding:20px 22px;width:min(92vw,360px);box-shadow:0 0 40px rgba(30,123,255,.5);direction:rtl}
+dialog#loginDlg::backdrop{background:rgba(1,8,24,.75)}
+@media print{#authBtn{display:none!important}}
+</style></head><body><main>
+<div class="top"><div><h1>جولات المرافق والصيانة الوقائية</h1><div class="mu" id="sub"></div><span class="chip ok" id="role" style="margin-top:6px"></span> <button type="button" class="gh" id="authBtn" hidden></button></div>
+<nav id="nav"><button data-go="d">لوحة المؤشرات</button><button data-go="r">جولة اليوم</button><button data-go="p">الصيانة الوقائية</button></nav></div>
+<section id="cmms" class="cmms" aria-label="FM NOON">
+<div class="cmms-hex" aria-hidden="true"><svg id="cm-hexsvg" viewBox="0 0 400 600" preserveAspectRatio="xMaxYMid slice"><defs><linearGradient id="cm-hf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a86ff" stop-opacity=".55"/><stop offset="1" stop-color="#0a3fb0" stop-opacity=".08"/></linearGradient></defs><g class="cm-hexa" id="cm-hexa"></g><g class="cm-hexb" id="cm-hexb"></g></svg></div>
+<div class="cmms-stage">
+<svg viewBox="0 0 600 600" role="img" aria-label="FM NOON: أدوات الصيانة، فني الصيانة، إدارة الصيانة، ومراقبة الأنظمة" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="cm-core" cx="50%" cy="42%" r="70%"><stop offset="0" stop-color="#0d3a8c"/><stop offset=".6" stop-color="#05194a"/><stop offset="1" stop-color="#020D24"/></radialGradient>
+<radialGradient id="cm-back" cx="50%" cy="50%" r="50%"><stop offset=".55" stop-color="#1b6dff" stop-opacity=".28"/><stop offset="1" stop-color="#1b6dff" stop-opacity="0"/></radialGradient>
+<radialGradient id="cm-hal" cx="50%" cy="50%" r="50%"><stop offset=".45" stop-color="#3aa0ff" stop-opacity=".85"/><stop offset="1" stop-color="#3aa0ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="cm-ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fdcff"/><stop offset=".5" stop-color="#1e7bff"/><stop offset="1" stop-color="#58c9ff"/></linearGradient>
+<filter id="cm-b1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
+<filter id="cm-b2" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+
+<circle cx="300" cy="300" r="298" fill="url(#cm-back)" class="cm-pulse d2"/>
+
+<g class="cm-spin">
+<circle cx="300" cy="300" r="284" fill="none" stroke="#2a7fff" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 9"/>
+<circle cx="300" cy="300" r="272" fill="none" stroke="#4fc3ff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="150 90 40 70 220 120 30 300" stroke-opacity=".85"/>
+</g>
+<g class="cm-spin rev">
+<circle cx="300" cy="300" r="258" fill="none" stroke="#3b8bff" stroke-opacity=".55" stroke-width="1" stroke-dasharray="1 6"/>
+<circle cx="300" cy="300" r="258" fill="none" stroke="#7fdcff" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 400 24 260 90 780"/>
+</g>
+
+<g class="cm-pulse" filter="url(#cm-b1)"><circle cx="300" cy="300" r="238" fill="none" stroke="#1e7bff" stroke-width="12"/></g>
+<circle cx="300" cy="300" r="238" fill="none" stroke="url(#cm-ring)" stroke-width="3.5"/>
+<circle cx="300" cy="300" r="229" fill="none" stroke="#3b8bff" stroke-opacity=".55" stroke-width="1"/>
+
+<g stroke="#2f8cff" stroke-opacity=".7" stroke-width="1.5" fill="none">
+<path d="M300 172V152M300 428V448M172 300H152M428 300H448"/>
+</g>
+<g fill="#7fdcff"><circle cx="300" cy="172" r="2.5"/><circle cx="300" cy="428" r="2.5"/><circle cx="172" cy="300" r="2.5"/><circle cx="428" cy="300" r="2.5"/></g>
+
+<g class="cm-pulse d2" filter="url(#cm-b2)"><circle cx="300" cy="300" r="128" fill="none" stroke="#2f8cff" stroke-width="7"/></g>
+<circle cx="300" cy="300" r="128" fill="none" stroke="url(#cm-ring)" stroke-width="2.5"/>
+<circle cx="300" cy="300" r="114" fill="url(#cm-core)" stroke="#3b8bff" stroke-width="1.5"/>
+<circle cx="300" cy="300" r="106" fill="none" stroke="#4fa3ff" stroke-opacity=".35" stroke-width="1"/>
+<text x="300" y="302" text-anchor="middle" dominant-baseline="central" font-size="40" font-weight="800" textLength="176" lengthAdjust="spacingAndGlyphs" style="fill:#4aa3ff;opacity:.65" filter="url(#cm-b2)">FM NOON</text>
+<text x="300" y="302" text-anchor="middle" dominant-baseline="central" font-size="40" font-weight="800" textLength="176" lengthAdjust="spacingAndGlyphs">FM NOON</text>
+
+<!-- TOP: tools -->
+<g class="cm-node" transform="translate(300 105)" tabindex="0"><title>أدوات الصيانة</title><g class="cm-float">
+<circle class="cm-halo" r="74" fill="url(#cm-hal)" pointer-events="none"/><circle r="52" fill="transparent"/>
+<circle class="cm-badge" r="46"/><circle r="39" fill="none" stroke="#4fa3ff" stroke-opacity=".35"/>
+<g transform="translate(-24 -24) scale(2)" class="cm-ico">
+<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+<path d="M3.2 3.2l2.6 2.6M5.8 5.8l6 6M4 2.4l-1.6 1.6 1.2 1.2 1.6-1.6z"/>
+</g></g></g>
+
+<!-- LEFT: technician -->
+<g class="cm-node" transform="translate(105 300)" tabindex="0"><title>فني الصيانة</title><g class="cm-float">
+<circle class="cm-halo" r="74" fill="url(#cm-hal)" pointer-events="none"/><circle r="52" fill="transparent"/>
+<circle class="cm-badge" r="46"/><circle r="39" fill="none" stroke="#4fa3ff" stroke-opacity=".35"/>
+<g transform="translate(-24 -24) scale(2)" class="cm-ico">
+<path d="M7.3 8.6a4.7 4.7 0 0 1 9.4 0"/><path d="M6 8.6h12"/><path d="M12 3.4v2.4"/>
+<path d="M9.3 8.6v1.2a2.7 2.7 0 0 0 5.4 0V8.6"/>
+<path d="M4.5 21v-1.4a4.6 4.6 0 0 1 4.6-4.6h5.8a4.6 4.6 0 0 1 4.6 4.6V21"/><path d="M12 15.2v5.8"/>
+</g></g></g>
+
+<!-- RIGHT: management gear + hand -->
+<g class="cm-node" transform="translate(495 300)" tabindex="0"><title>إدارة الصيانة</title><g class="cm-float">
+<circle class="cm-halo" r="74" fill="url(#cm-hal)" pointer-events="none"/><circle r="52" fill="transparent"/>
+<circle class="cm-badge" r="46"/><circle r="39" fill="none" stroke="#4fa3ff" stroke-opacity=".35"/>
+<g transform="translate(-24 -24) scale(2)" class="cm-ico">
+<path id="cm-gear" d=""/><circle cx="12" cy="8.4" r="1.7"/>
+<path d="M2 15.6h3.2c.9 0 1.7.3 2.4.9l1.6 1.4h4.4a1.4 1.4 0 0 1 0 2.8H9.6"/>
+<path d="M9.6 20.7l5.3-.1c1.3 0 2.2-.5 3.1-1.3l3.6-3.4"/>
+</g></g></g>
+
+<!-- BOTTOM: monitoring -->
+<g class="cm-node" transform="translate(300 495)" tabindex="0"><title>مراقبة الأنظمة</title><g class="cm-float">
+<circle class="cm-halo" r="74" fill="url(#cm-hal)" pointer-events="none"/><circle r="52" fill="transparent"/>
+<circle class="cm-badge" r="46"/><circle r="39" fill="none" stroke="#4fa3ff" stroke-opacity=".35"/>
+<g transform="translate(-24 -24) scale(2)" class="cm-ico">
+<rect x="2.6" y="4" width="18.8" height="12.4" rx="2"/><path d="M12 16.4V20M8 20.2h8"/>
+<path d="M5.6 10.6h2.8l1.6-3.2 3 6.2 1.6-3H18.4"/>
+</g></g></g>
+</svg>
+</div>
+</section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="cm-bar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fd6ff"/><stop offset="1" stop-color="#1e7bff"/></linearGradient></defs></svg><dialog id="loginDlg"><form id="loginForm" autocomplete="on"><h2>دخول المسؤول</h2>
+<label class="num">البريد الإلكتروني<input type="email" id="lgE" autocomplete="username" required style="width:100%"></label>
+<label class="num" style="margin-top:8px">كلمة المرور<input type="password" id="lgP" autocomplete="current-password" required style="width:100%"></label>
+<div class="ctl" style="margin-top:14px"><button class="pr" type="submit">دخول</button><button class="gh" type="button" id="lgX">إلغاء</button></div></form></dialog>
+<div id="app"></div></main>
+<script>
+const S=[
+['المرافق',[['عداد الكهرباء','r','kWh',1],['عداد الميه','r','م³',1]]],
+['المولد',[['المولد','s'],['سولار المولد','r','لتر'],['مفاتيح المولد الداخلية','s']]],
+['الطلمبات',[['طلمبات الميه 1','s'],['طلمبات الميه 2','s'],['طلمبات الميه 3','s'],['طلمبة الوكى','sr','بار'],['طلمبة الكهرباء','sr','بار'],['طلمبة الديزيل','sr','بار'],['طلمبة الغاطس','s']]],
+['لوحات الفاير',[['اللوحة الرئيسية','sa'],['لوحة البرج القديم','sa'],['لوحة البرج الجديد','sa']]],
+['زونات الحريق (1 إلى 8)',['زون 1','زون 2','زون 3','البرج القديم زون 1','البرج القديم زون 2','البرج القديم زون 3','زون 4','زون 5','البرج الجديد زون 1','البرج الجديد زون 2','البرج الجديد زون 3','زون 6','زون 7','زون 8'].map(n=>[n,'f'])],
+['زونات الحريق (من 9)',['البرج الجديد زون 4','البرج الجديد زون 5','البرج الجديد زون 6','زون 9','زون 10','زون 11'].map(n=>[n,'f'])],
+['الأسانسيرات',[['أسانسير البرج القديم','s'],['أسانسير البرج الجديد','s']]],
+['الريتش ترك',[['ريتش نون (Yale)','sh'],['ريتش ايجار (Finet)','sh']]],
+['مكن التغليف',[...['52635','52636','53545'].map(n=>['مكنة بابل NAF '+n,'s']),...['34857','27255','51820'].map(n=>['مكنة فقاعة FAR '+n,'s'])]],
+['المعدات',[['صابر 1','sh'],['صابر 4','sh'],['حميده 1','sh'],...[1,2,3,4,5].map(i=>['Yale '+i,'sh']),['فورك الكهرباء Noon','sh'],['حضان جديد','s']]],
+['الهاند باليت',[...[['1','F'],['2','F'],['3','F'],['4','Y'],['5','Y'],['6','Flex'],['7','Flex']].map(a=>['هاند باليت '+a[0]+' (Noon - '+a[1]+')','s'])]]
+];
+const IT=[];S.forEach((s,i)=>s[1].forEach((x,j)=>IT.push({id:i+'_'+j,sec:s[0],n:x[0],k:x[1],u:x[2]||'',cum:x[3],code:['UT','GN','PM','FA','FZ','FB','EL','RT','PK','EQ','HP'][i]+'-'+String(j+1).padStart(2,'0'),g:['المعدات','الهاند باليت'].includes(s[0])?'B':'A'})));
+const opts=it=>it.k=='f'?['طبيعي','إنذار','عطل']:['سليم','متوقف','عطل'];
+const sev=v=>v=='عطل'?'bd':(v=='متوقف'||v=='إنذار')?'wn':v?'ok':'na';
+const sym={ok:'✓',wn:'!',bd:'✕',na:'–'};
+const ld=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const T=ld(new Date()),dayOf=n=>ld(new Date(Date.now()+n*864e5));
+const fd=k=>new Date(k+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+const KEY='fm-rounds-v2';let DB=null;
+try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const persist=()=>{if(CL){if(ADM)saveCfg();return}try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}};
+function seed(){const d={},ppm={},c={};
+IT.forEach(it=>{c[it.id]=it.u=='kWh'?48000:it.u=='م³'?5200:it.u=='لتر'?800:it.u=='بار'?7:200+Math.floor(Math.random()*1800)});
+for(let i=8;i>=1;i--){const r={};IT.forEach(it=>{const v={};
+v.s=Math.random()<.03?'عطل':opts(it)[0];
+if(it.k.includes('h')){c[it.id]+=Math.round((5+Math.random()*5)*10)/10;v.h=c[it.id]}
+if(it.k.includes('r')){c[it.id]+=it.u=='kWh'?300+Math.round(Math.random()*60):it.u=='م³'?12+Math.round(Math.random()*5):(it.u=='بار'?0:-(20+Math.round(Math.random()*10)));v.r=c[it.id]}
+if(it.k.includes('a'))v.a=Math.random()<.1?1:0;r[it.id]=v});d[dayOf(-i)]=r}
+IT.filter(it=>it.k.includes('h')).forEach(it=>ppm[it.id]={iv:250,last:Math.round(c[it.id]-Math.random()*270)});
+return{days:d,ppm,demo:true}}
+if(!DB||!DB.days)DB=seed();
+DB.nm=DB.nm||{};const SN=S.map(s=>s[0]),PG={A:'',B:''};IT.forEach(it=>{it.n0=it.n;it.k0=it.k;it.u0=it.u;it.g0=it.g});const BASE=IT.slice();DB.hide=DB.hide||{};DB.cfg=DB.cfg||{};DB.custom=DB.custom||[];DB.csec=DB.csec||[];DB.cn=DB.cn||0;const NB=S.length;DB.csec.forEach(n=>{S.push([n,[]]);SN.push(n)});
+function rebuild(){IT.length=0;const cu=DB.custom.map(c=>({id:c.id,sec:'',n:c.n,k:c.k,u:c.u||'',cum:0,code:'',g:c.g,n0:c.n,k0:c.k,u0:c.u||'',g0:c.g}));[...BASE,...cu].forEach(it=>{const c=DB.cfg[it.id]||{},ci=+it.id.split('_')[0];it.n=DB.nm[it.id]||it.n0;it.k=c.k||it.k0;it.u=c.u!==undefined?c.u:it.u0;it.g=c.g||it.g0;it.sec=S[ci][0];if(!it.code)it.code='CU-'+it.id.split('_')[1].toUpperCase();if(!DB.hide[it.id])IT.push(it)})}
+function applyNames(){S.forEach((s,i)=>{s[0]=DB.nm['s'+i]||SN[i]});rebuild();PG.A=DB.nm.pgA||'قرائات cfc3';PG.B=DB.nm.pgB||'عدد ساعات المعدات cfc4'}
+applyNames();
+const days=()=>Object.keys(DB.days).sort();
+const latest=()=>days().slice(-1)[0];
+function prevOf(id,f,before){for(const k of days().filter(k=>k<before).reverse()){const v=DB.days[k][id];if(v&&v[f]!==undefined&&v[f]!==''&&v[f]!==null)return v[f]}return null}
+const curH=id=>prevOf(id,'h','9999');
+function P(id){const cur=curH(id);if(!DB.ppm[id])DB.ppm[id]={iv:250,last:cur||0};return DB.ppm[id]}
+const FT=/[?&]tech=1/.test(location.search);let V='d',draft={},G='A',EM=false,ADM=!FT,CL=null,ct=0;
+function initDraft(){draft=JSON.parse(JSON.stringify(DB.days[T]||{}));IT.forEach(it=>{const v=draft[it.id]||(draft[it.id]={});if(!v.s)v.s=opts(it)[0]});if(!draft._m)draft._m={sh:'صباحي',tech:'',sup:''}}
+function ppmRows(){return IT.filter(it=>it.k.includes('h')).map(it=>{const cur=curH(it.id),p=P(it.id),used=cur==null?null:cur-p.last;return{it,cur,p,used,ratio:used==null?0:used/p.iv}}).sort((a,b)=>b.ratio-a.ratio)}
+function alerts(){const L=latest(),D=DB.days[L],al=[],ks=days(),pk=ks[ks.length-2],PD=pk?DB.days[pk]:{};
+IT.forEach(it=>{const v=D[it.id]||{},s=sev(v.s);
+if(s=='bd')al.push({sv:2,t:it.sec+': '+it.n+' — '+v.s});else if(s=='wn')al.push({sv:1,t:it.sec+': '+it.n+' — '+v.s});
+if(+v.a>0)al.push({sv:2,t:it.n+': '+v.a+' إنذار مسجل'});
+const q=PD[it.id]||{};
+if(it.cum&&v.r!==undefined&&q.r!==undefined&&v.r<q.r)al.push({sv:1,t:it.n+': القراءة أقل من اللي قبلها، راجعها'});
+if(v.h!==undefined&&q.h!==undefined&&v.h<q.h)al.push({sv:1,t:it.n+': ساعات التشغيل أقل من اللي قبلها، راجعها'})});
+ppmRows().forEach(r=>{if(r.ratio>=1)al.push({sv:2,t:'صيانة متأخرة: '+r.it.n+' (عدّت '+Math.round(r.used-r.p.iv)+' ساعة)'});else if(r.ratio>=.85)al.push({sv:1,t:'صيانة قربت: '+r.it.n+' (باقي '+Math.round(r.p.iv-r.used)+' ساعة)'})});
+return al.sort((a,b)=>b.sv-a.sv)}
+function chart(id,title,u){const ks=days(),pts=[];
+for(let i=1;i<ks.length;i++){const a=(DB.days[ks[i-1]][id]||{}).r,b=(DB.days[ks[i]][id]||{}).r;if(a!=null&&b!=null&&a!==''&&b!=='')pts.push([ks[i].slice(5).replace('-','/'),b-a])}
+const p=pts.slice(-7);if(!p.length)return'<h2>'+title+'</h2><p class="mu">محتاج قراءتين متتاليتين على الأقل.</p>';
+const mx=Math.max(...p.map(x=>x[1]),1),w=52;
+return'<h2>'+title+' <span class="mu">('+u+' / يوم)</span></h2><svg viewBox="0 0 '+p.length*w+' 130" width="100%" role="img" aria-label="'+title+'" style="direction:ltr">'+p.map((x,i)=>{const h=Math.max(2,x[1]/mx*80);return'<rect x="'+(i*w+8)+'" y="'+(100-h)+'" width="'+(w-16)+'" height="'+h+'" rx="3" fill="var(--ac)"/><text x="'+(i*w+w/2)+'" y="'+(94-h)+'" text-anchor="middle" font-size="11">'+Math.round(x[1])+'</text><text x="'+(i*w+w/2)+'" y="118" text-anchor="middle" font-size="11">'+x[0]+'</text>'}).join('')+'</svg>'}
+function dash(){const L=latest();
+if(!L)return'<div class="empty panel"><h2>لسه مفيش جولات</h2><p class="mu">سجّل أول جولة وهتظهر هنا حالة كل الأصول.</p><button class="pr" data-go="r">ابدأ جولة اليوم</button></div>';
+const D=DB.days[L];let n={ok:0,wn:0,bd:0};IT.forEach(it=>{const s=sev((D[it.id]||{}).s);if(n[s]!==undefined)n[s]++});
+const al=alerts(),late=ppmRows().filter(r=>r.ratio>=1).length;
+return'<div class="sum"><div class="ok"><b>'+n.ok+'</b>أصل سليم</div><div class="wn"><b>'+n.wn+'</b>متوقف أو إنذار</div><div class="bd"><b>'+n.bd+'</b>عطل</div><div class="'+(late?'bd':'ok')+'"><b>'+late+'</b>صيانة متأخرة</div></div>'
++(L!=T?'<div class="banner"><span>آخر جولة مسجلة: '+fd(L)+'. جولة اليوم لسه ما اتسجلتش.</span><button class="gh" data-go="r">سجّل جولة اليوم</button></div>':'')
++'<div class="panel map"><h2>حالة كل الأصول في آخر جولة</h2>'+S.map((s,i)=>!IT.some(a=>a.id.split('_')[0]==i)?'':'<div class="g"><div class="gl">'+s[0]+'</div><div class="ts">'+IT.filter(a=>a.id.split('_')[0]==i).map(it=>{const st=(D[it.id]||{}).s,c=sev(st);return'<span class="t '+c+'" title="'+it.n+' — '+(st||'بدون تسجيل')+'">'+sym[c]+'</span>'}).join('')+'</div></div>').join('')+'</div>'
++'<div class="cols"><div class="panel"><h2>محتاج تدخل ('+al.length+')</h2>'+(al.length?'<ul class="al">'+al.slice(0,12).map(a=>'<li class="s'+a.sv+'">'+a.t+'</li>').join('')+'</ul>'+(al.length>12?'<p class="mu">و'+(al.length-12)+' بنود تانية.</p>':''):'<p class="mu">كل حاجة سليمة ومفيش صيانة قربت.</p>')+'</div>'
++'<div class="panel">'+chart('0_0','استهلاك الكهرباء','kWh')+'<div style="height:12px"></div>'+chart('0_1','استهلاك الميه','م³')+'</div></div>'}
+const LB={h:it=>'ساعات التشغيل',r:it=>(it.u=='بار'?'الضغط':'القراءة')+(it.u?' ('+it.u+')':''),a:it=>'عدد الإنذارات'};
+function roundOld(){let h='<div class="top"><div><h2>جولة '+fd(T)+'</h2><div class="mu">الخانة الفاضية بتورّيك آخر قراءة مسجلة. الحالة مختارة «سليم» من البداية، غيّر بس اللي مش سليم.</div></div></div>';
+S.forEach((s,i)=>{h+='<section class="sec"><h2>'+s[0]+'</h2>';
+IT.filter(it=>it.id.startsWith(i+'_')).forEach(it=>{const v=draft[it.id]||{};
+h+='<div class="row"><div class="nm">'+it.n+'</div><div class="ctl"><div class="seg" data-id="'+it.id+'">'+opts(it).map(o=>'<button type="button" data-v="'+o+'" class="'+(v.s==o?'on '+sev(o):'')+'">'+o+'</button>').join('')+'</div>';
+['h','r','a'].forEach(f=>{if(it.k.includes(f)){const pv=prevOf(it.id,f,T);h+='<label class="num"><span>'+LB[f](it)+'</span><input type="number" inputmode="decimal" data-id="'+it.id+'" data-f="'+f+'" value="'+(v[f]??'')+'" placeholder="'+(pv!=null?'آخر: '+pv:'')+'"></label>'}});
+h+='</div></div>'});h+='</section>'});
+return h+'<div class="bar"><button class="pr" data-save="1">حفظ الجولة</button><span class="mu">بتتحفظ على الجهاز ده</span></div>'}
+function ppmv(){const rows=ppmRows();
+if(!rows.some(r=>r.cur!=null))return'<div class="panel empty"><h2>مفيش ساعات تشغيل مسجلة</h2><p class="mu">سجّل ساعات المعدات في جولة اليوم وهتظهر هنا.</p></div>';
+return'<div class="panel"><h2>الصيانة حسب ساعات التشغيل</h2><div class="mu" style="margin-bottom:8px">مرتبة من الأقرب للاستحقاق. غيّر الفترة (بالساعات) لأي معدة، وبعد ما الصيانة تخلص اضغط «تمت الصيانة».</div><div class="wrap"><table><tr><th>المعدة</th><th>الساعات الحالية</th><th>آخر صيانة عند</th><th>كل (ساعة)</th><th>التقدم</th><th>الحالة</th><th></th></tr>'
++rows.map(r=>{const c=r.cur==null?'na':r.ratio>=1?'bd':r.ratio>=.85?'wn':'ok',txt={na:'بدون ساعات',bd:'متأخرة',wn:'قربت',ok:'تمام'}[c],col=c=='bd'?'var(--bd)':c=='wn'?'var(--wn)':'var(--ok)';
+return'<tr><td><b>'+r.it.n+'</b></td><td>'+(r.cur==null?'—':r.cur)+'</td><td>'+r.p.last+'</td><td><input type="number" data-iv="'+r.it.id+'" value="'+r.p.iv+'" min="1"></td><td><span class="pb"><i style="width:'+Math.min(100,r.ratio*100)+'%;background:'+col+'"></i></span> '+Math.round(r.ratio*100)+'%</td><td><span class="chip '+c+'">'+txt+'</span></td><td>'+(r.cur==null?'':'<button class="gh" data-done="'+r.it.id+'">تمت الصيانة</button>')+'</td></tr>'}).join('')+'</table></div>'
++'<p class="mu">الهاند باليت مالوش ساعات في القايمة، فمش داخل هنا. لو حبيت نضيف له جدول صيانة بالتاريخ قولّي.</p></div>'}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const TY=[['s','حالة فقط'],['sh','حالة + ساعات تشغيل'],['sr','حالة + قراءة'],['sa','حالة + إنذارات'],['f','حالة (حريق)']];
+function ctl(it){return'<div class="ed"><select data-cf="k" data-id="'+it.id+'" aria-label="نوع البند">'+TY.map(t=>'<option value="'+t[0]+'"'+(it.k==t[0]?' selected':'')+'>'+t[1]+'</option>').join('')+'</select>'+(it.k.includes('r')?'<input type="text" data-cf="u" data-id="'+it.id+'" value="'+esc(it.u)+'" placeholder="الوحدة" aria-label="الوحدة">':'')+'<select data-cf="g" data-id="'+it.id+'" aria-label="الصفحة"><option value="A"'+(it.g=='A'?' selected':'')+'>'+PG.A+'</option><option value="B"'+(it.g=='B'?' selected':'')+'>'+PG.B+'</option></select><button type="button" class="gh" data-del="'+it.id+'">حذف</button></div>'}
+function frow(it){const v=draft[it.id]||{},f=it.k.includes('h')?'h':it.k.includes('r')?'r':'',pv=f?prevOf(it.id,f,T):null,c=sev(v.s),inp=(g,pvv)=>'<input type="number" inputmode="decimal" data-id="'+it.id+'" data-f="'+g+'" value="'+(v[g]??'')+'" placeholder="'+(pvv!=null?'آخر: '+pvv:'')+'" aria-label="'+LB[g](it)+'">';
+return'<tr class="'+(c=='bd'?'rb':'')+'"><td class="cd">'+it.code+'</td><td>'+(EM?'<input type="text" class="nt" data-nm="'+it.id+'" value="'+esc(it.n)+'">'+ctl(it):'<b>'+it.n+'</b>')+'</td><td><div class="seg" data-id="'+it.id+'">'+opts(it).map(o=>'<button type="button" data-v="'+o+'" class="'+(v.s==o?'on '+sev(o):'')+'">'+o+'</button>').join('')+'</div></td><td>'+(f?inp(f,pv)+'<small>'+LB[f](it)+'</small>':'<span class="mu">—</span>')+'</td><td>'+(it.k.includes('a')?inp('a',prevOf(it.id,'a',T)):'<span class="mu">—</span>')+'</td><td><input type="text" class="nt" data-id="'+it.id+'" data-f="n" value="'+esc(v.n||'')+'" placeholder="'+(c=='bd'?'اكتب سبب العطل':'')+'" aria-label="ملاحظات"></td></tr>'}
+function round(){const m=draft['_m'+G]||(draft['_m'+G]={sh:'صباحي',tech:'',sup:''});let dn=0,bad=0;
+IT.forEach(it=>{if(!draft[it.id])draft[it.id]={s:opts(it)[0]}});const GI=IT.filter(it=>it.g==G);GI.forEach(it=>{const v=draft[it.id]||{};if(['h','r','a'].every(f=>!it.k.includes(f)||(v[f]!==''&&v[f]!=null&&v[f]!==undefined)))dn++;if(sev(v.s)=='bd')bad++});
+const pc=Math.round(dn/(GI.length||1)*100);
+let h='<div class="gs">'+[['A',PG.A],['B',PG.B]].map(g=>'<button type="button" data-g="'+g[0]+'" class="'+(G==g[0]?'on':'')+'">'+g[1]+'</button>').join('')+'<button type="button" class="gh" data-em="1">'+(EM?'تم التعديل':'تعديل الأسماء')+'</button></div><div class="form"><div class="fh"><div><div class="ft">'+(EM?'<input type="text" class="tin" data-nm="pg'+G+'" value="'+esc(PG[G])+'">':PG[G])+'</div><div class="mu">Daily Operations Round Sheet</div></div><div class="fm">رقم النموذج<b>RND-'+G+'-'+T.replace(/-/g,'')+'</b></div></div>'
++'<div class="fg"><label>التاريخ<b>'+fd(T)+'</b></label><label>الوردية<select data-m="sh">'+['صباحي','مسائي','ليلي'].map(o=>'<option'+(m.sh==o?' selected':'')+'>'+o+'</option>').join('')+'</select></label><label>اسم الفني<input type="text" data-m="tech" value="'+esc(m.tech||'')+'"></label><label>المشرف<input type="text" data-m="sup" value="'+esc(m.sup||'')+'"></label></div>'
++'<div class="fp"><span>اكتمال القراءات: <b>'+pc+'%</b></span><span class="pb" style="width:200px"><i style="width:'+pc+'%;background:var(--ac)"></i></span><span>'+(bad?'<b style="color:var(--bd)">'+bad+' عطل مسجل، اكتب سببه في الملاحظات</b>':'لا توجد أعطال')+'</span></div>';
+S.forEach((s,i)=>{const its=IT.filter(it=>it.id.startsWith(i+'_')&&it.g==G);const tot=IT.filter(it=>it.id.startsWith(i+'_')).length;if(!its.length&&!(EM&&!tot))return;const sb=its.filter(it=>sev((draft[it.id]||{}).s)=='bd').length;
+h+='<section class="fs"><h3><span>'+(EM?'<input type="text" class="tin" data-nm="s'+i+'" value="'+esc(s[0])+'">':s[0])+'</span>'+(EM?'<span><button type="button" class="gh" data-add="'+i+'">+ بند</button> <button type="button" class="gh" data-delsec="'+i+'">حذف القسم</button></span>':'')+'<span class="mu">'+its.length+' بند'+(sb?' — '+sb+' عطل':'')+'</span></h3><div class="wrap"><table class="ct"><tr><th>الكود</th><th>الأصل</th><th>الحالة</th><th>القيمة</th><th>الإنذارات</th><th>ملاحظات</th></tr>'+its.map(frow).join('')+'</table></div></section>'});
+return h+(EM?'<div class="fp"><label>اسم السيستم <input type="text" class="tin" style="width:260px" data-nm="app" value="'+esc(DB.nm.app||document.querySelector('h1').dataset.d||'')+'"></label><button type="button" class="gh" data-addsec="1">+ قسم جديد</button><button type="button" class="gh" data-restore="1">استرجاع المحذوف</button></div>':'')+'<div class="sig"><div>توقيع الفني</div><div>توقيع المشرف</div><div>اعتماد مدير الصيانة</div></div></div><div class="bar"><button class="pr" data-save="1">حفظ واعتماد الجولة</button><button class="gh" onclick="try{print()}catch(e){}">طباعة النموذج</button><span class="mu">بتتحفظ على الجهاز ده</span></div>'}
+const SH=['صباحي','مسائي','ليلي'];
+function saveCfg(){clearTimeout(ct);ct=setTimeout(()=>{CL.doc('cfg/main').set({nm:DB.nm,hide:DB.hide,cfg:DB.cfg,custom:DB.custom,csec:DB.csec,cn:DB.cn,ppm:DB.ppm}).catch(()=>toast('تعذر حفظ الإعدادات.'))},400)}
+function applyCfg(c){S.length=NB;SN.length=NB;DB.nm=c.nm||{};DB.hide=c.hide||{};DB.cfg=c.cfg||{};DB.custom=c.custom||[];DB.csec=c.csec||[];DB.cn=c.cn||0;DB.ppm=c.ppm||{};DB.csec.forEach(n=>{S.push([n,[]]);SN.push(n)});applyNames()}
+function pushRound(){if(!CL)return;const D=DB.days[T],m=D['_m'+G]||{},items={};IT.filter(it=>it.g==G).forEach(it=>{items[it.id]=D[it.id]});CL.doc('rounds/'+T+'_'+G+'_s'+Math.max(0,SH.indexOf(m.sh))).set({d:T,g:G,m,items}).then(()=>toast('الجولة اتبعتت للمدير.')).catch(()=>toast('تعذر إرسال الجولة، حاول تاني.'))}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}
+function render(){if(!ADM){V='r';EM=false}document.body.classList.toggle('tech',!ADM);document.getElementById('nav').style.display=ADM?'':'none';const rl=document.getElementById('role');if(rl){rl.textContent=ADM?'وضع المسؤول':'وضع الفني: تسجيل الجولة';rl.className='chip '+(ADM?'ok':'wn')}const h1=document.querySelector('h1');if(!h1.dataset.d)h1.dataset.d=h1.textContent;h1.textContent=DB.nm.app||h1.dataset.d;document.getElementById('app').innerHTML=(ERR?'<div class="banner"><span>'+ERR+'</span></div>':'')+(DB.demo&&ADM?'<div class="banner"><span>البيانات الحالية تجريبية، عشان تشوف الشكل.</span><button class="gh" data-clear="1">امسح التجريبي وابدأ</button></div>':'')+(V=='d'?dash():V=='r'?round():ppmv());
+document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go==V));const cm=document.getElementById('cmms');if(cm)cm.hidden=V!='d';
+const L=latest();document.getElementById('sub').textContent=L?'آخر جولة: '+fd(L):'مفيش جولات مسجلة'}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(!ADM&&!(t.dataset.v||t.dataset.g||t.dataset.save))return;
+if(t.dataset.em&&ADM){EM=!EM;render()}
+else if(t.dataset.g){G=t.dataset.g;render();scrollTo(0,0)}
+else if(t.dataset.go){V=t.dataset.go;if(V=='r')initDraft();render();scrollTo(0,0)}
+else if(t.dataset.v){const id=t.parentNode.dataset.id;draft[id].s=t.dataset.v;render()}
+else if(t.dataset.save){let miss=0;IT.filter(it=>it.g==G).forEach(it=>{const v=draft[it.id];['h','r','a'].forEach(f=>{if(it.k.includes(f)){if(v[f]===''||v[f]==null)miss++;else v[f]=+v[f]}})});
+const old=DB.days[T]||{};IT.filter(it=>it.g==G).forEach(it=>{old[it.id]=JSON.parse(JSON.stringify(draft[it.id]))});old['_m'+G]=JSON.parse(JSON.stringify(draft['_m'+G]));DB.days[T]=old;persist();pushRound();V=ADM?'d':'r';render();scrollTo(0,0);toast(miss?'اتحفظت الجولة. فيه '+miss+' قراءة فاضية.':'اتحفظت الجولة.')}
+else if(t.dataset.add!==undefined){DB.custom.push({id:t.dataset.add+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
+else if(t.dataset.del){DB.hide[t.dataset.del]=1;persist();rebuild();render()}
+else if(t.dataset.delsec!==undefined){IT.filter(it=>it.id.split('_')[0]==t.dataset.delsec).forEach(it=>{DB.hide[it.id]=1});persist();rebuild();render()}
+else if(t.dataset.addsec){const i=S.length;DB.csec.push('قسم جديد');S.push(['قسم جديد',[]]);SN.push('قسم جديد');DB.custom.push({id:i+'_c'+(++DB.cn),n:'بند جديد',k:'s',u:'',g:G});persist();rebuild();render()}
+else if(t.dataset.restore){DB.hide={};persist();rebuild();render()}
+else if(t.dataset.done){const id=t.dataset.done;P(id).last=curH(id);persist();render();toast('اتسجلت الصيانة.')}
+else if(t.dataset.clear){DB={days:{},ppm:{},demo:false};persist();V='r';initDraft();render()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.f){const v=draft[t.dataset.id];v[t.dataset.f]=t.value===''?'':t.value}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.m&&draft['_m'+G])draft['_m'+G][t.dataset.m]=t.value});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.cf){const c=DB.cfg[t.dataset.id]||(DB.cfg[t.dataset.id]={});c[t.dataset.cf]=t.value;persist();rebuild();render()}});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.nm){const v=t.value.trim();if(v)DB.nm[t.dataset.nm]=v;else delete DB.nm[t.dataset.nm];applyNames();persist();render()}});
+document.addEventListener('change',e=>{const t=e.target;if(ADM&&t.dataset.iv){P(t.dataset.iv).iv=Math.max(1,+t.value||250);persist();render()}});
+persist();
+/* ===== Standalone backend (Firebase) — fill FB_CONFIG, see SETUP.md ===== */
+const FB_CONFIG={apiKey:"AIzaSyCEDIKPi0Y-X0AcB-zXw2tRI_rSV6TcAxE",authDomain:"fm-noon.firebaseapp.com",projectId:"fm-noon",storageBucket:"fm-noon.firebasestorage.app",messagingSenderId:"1047596065786",appId:"1:1047596065786:web:fddadb8f292b13792afa43"};
+const ADMIN_EMAILS=["hkota407@gmail.com"];
+let unsub=null,booted=false,AUTH=null,ERR='';
+function failState(m){ERR=m;ADM=false;V='r';DB.days={};DB.demo=false;DB.ppm={};initDraft();render();updAuthUI();toast(m)}
+const FBON=!!FB_CONFIG.apiKey;
+function updAuthUI(){const b=document.getElementById('authBtn');if(!b)return;b.hidden=!FBON;b.textContent=ADM&&FBON?'تسجيل خروج':'دخول المسؤول'}
+async function applySession(user){
+ADM=!FT&&!!user&&!user.isAnonymous&&ADMIN_EMAILS.indexOf((user.email||'').toLowerCase())>-1;
+if(unsub){unsub();unsub=null}
+ERR='';DB.days={};DB.demo=false;DB.ppm={};
+try{const cs=await CL.doc('cfg/main').get();if(cs.exists)applyCfg(cs.data());else if(ADM)saveCfg()}catch(e){toast('تعذر تحميل الإعدادات.')}
+if(ADM){unsub=CL.collection('rounds').onSnapshot(sn=>{const d={};sn.docs.slice().sort((a,b)=>a.id<b.id?-1:1).forEach(x=>{const r=x.data();d[r.d]=Object.assign(d[r.d]||{},r.items,{['_m'+r.g]:r.m})});DB.days=d;if(V=='d'||V=='p')render()},()=>toast('تعذر قراءة الجولات.'));if(!booted)V='d'}else V='r';
+booted=true;initDraft();render();updAuthUI()}
+function boot(){
+if(!FBON){render();updAuthUI();return}
+if(!window.firebase){failState('تعذر تحميل خدمة Firebase. تأكد من الاتصال بالإنترنت ثم حدّث الصفحة.');return}
+document.getElementById('app').innerHTML='<p class="mu">جاري التحميل...</p>';
+try{firebase.initializeApp(FB_CONFIG)}catch(e){}
+AUTH=firebase.auth();CL=firebase.firestore();
+AUTH.onAuthStateChanged(u=>{if(!u){AUTH.signInAnonymously().catch(er=>failState('تعذر الاتصال بالخادم ('+((er&&er.code)||'خطأ')+'). فعّل Anonymous في Firebase Authentication.'));return}applySession(u)})}
+document.getElementById('authBtn').addEventListener('click',()=>{if(!AUTH)return;if(ADM)AUTH.signOut();else document.getElementById('loginDlg').showModal()});
+document.getElementById('lgX').addEventListener('click',()=>document.getElementById('loginDlg').close());
+document.getElementById('loginForm').addEventListener('submit',e=>{e.preventDefault();AUTH.signInWithEmailAndPassword(document.getElementById('lgE').value.trim(),document.getElementById('lgP').value).then(()=>{document.getElementById('loginDlg').close();document.getElementById('lgP').value=''}).catch(()=>toast('بيانات الدخول غير صحيحة.'))});
+boot();
+</script>
+<script>
+/* CMMS hero: gear path + hex background (self-contained, safe if elements are missing) */
+(function(){
+try{
+var g=document.getElementById('cm-gear');
+if(g){var n=8,cx=12,cy=8.4,ro=5.5,ri=4.3,d='',P=function(r,a){return (cx+r*Math.cos(a)).toFixed(2)+' '+(cy+r*Math.sin(a)).toFixed(2)};
+for(var i=0;i<n;i++){var a=i*2*Math.PI/n;
+d+=(i?'L':'M')+P(ri,a-.34)+'L'+P(ro,a-.19)+'L'+P(ro,a+.19)+'L'+P(ri,a+.34)+'A'+ri+' '+ri+' 0 0 1 '+P(ri,a+2*Math.PI/n-.34)}
+g.setAttribute('d',d+'Z')}
+var A=document.getElementById('cm-hexa'),B=document.getElementById('cm-hexb');
+if(A&&B){var NS='http://www.w3.org/2000/svg';
+var hx=function(par,x,y,r,o,fill){var p=document.createElementNS(NS,'polygon'),pts=[];
+for(var k=0;k<6;k++){var a=Math.PI/180*(60*k-30);pts.push((x+r*Math.cos(a)).toFixed(1)+','+(y+r*Math.sin(a)).toFixed(1))}
+p.setAttribute('points',pts.join(' '));p.setAttribute('fill',fill?'url(#cm-hf)':'none');
+p.setAttribute('stroke','#2f8cff');p.setAttribute('stroke-opacity',o);p.setAttribute('stroke-width','1.5');par.appendChild(p)};
+/* honeycomb cluster: pointy-top, r=46 */
+var r=46,w=Math.sqrt(3)*r,v=1.5*r;
+var cells=[[2,1,1,.6],[3,1,0,.35],[1.5,2,0,.4],[2.5,2,1,.7],[3.5,2,0,.3],[2,3,0,.45],[3,3,1,.55],[1.5,4,1,.35],[2.5,4,0,.4],[3.5,4,0,.25],[2,5,0,.3],[3,5,1,.4],[2.5,6,0,.25],[3.5,6,1,.3]];
+cells.forEach(function(c){hx(A,c[0]*w-60,c[1]*v+10,r-3,c[3]+.15,c[2])});
+/* a few scattered smaller hexes */
+[[310,96,26,.5,1],[360,150,16,.6,0],[260,560,22,.35,1],[372,520,14,.5,0],[330,40,12,.45,0]].forEach(function(c){hx(B,c[0],c[1],c[2],c[3],c[4])})}
+}catch(e){}
+})();
+</script>
+</body></html>
